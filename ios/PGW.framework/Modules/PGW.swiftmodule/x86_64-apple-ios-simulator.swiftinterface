@@ -1,0 +1,701 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.1.3 (swiftlang-1100.0.282.1 clang-1100.0.33.15)
+// swift-module-flags: -target x86_64-apple-ios11.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name PGW
+import Darwin
+import Foundation
+import Swift
+import UIKit
+import WebKit
+@objc public class InstallmentPayment : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class CardTokenPaymentBuilder : PGW.BaseCardPaymentBuilder {
+  @objc public init(cardToken: Swift.String)
+  @objc public func securityCode(_ securityCode: Swift.String) -> PGW.CardTokenPaymentBuilder
+  @objc public func expiryMonth(_ month: Swift.Int) -> PGW.CardTokenPaymentBuilder
+  @objc public func expiryYear(_ year: Swift.Int) -> PGW.CardTokenPaymentBuilder
+  @objc public func email(_ email: Swift.String) -> PGW.CardTokenPaymentBuilder
+  @objc public func mobileNumber(_ mobileNumber: Swift.String) -> PGW.CardTokenPaymentBuilder
+  @objc public func cardToken(_ cardToken: Swift.String) -> PGW.CardTokenPaymentBuilder
+  @objc public func build() -> PGW.CreditCardPayment
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class PaymentOptionDetailResponse : PGW.BaseResponse {
+  @objc public var paymentChannel: Swift.String! {
+    get
+    }
+  @objc public var creditCardOptionDetails: PGW.CreditCardOptionDetail? {
+    get
+    }
+  @objc public var installmentOptionDetail: PGW.InstallmentOptionDetail? {
+    get
+    }
+  @objc public var alternativeOptionDetail: PGW.AlternativeOptionDetail? {
+    get
+    }
+  @objc override dynamic public init()
+  @objc deinit
+}
+public typealias response<T> = (T) -> ()
+public typealias failure = (Foundation.NSError) -> ()
+@objc public class InstallmentPaymentBuilder : ObjectiveC.NSObject {
+  @objc public init(period: Swift.Int)
+  @objc public func withCreditCardPayment(_ creditCardPayment: PGW.CreditCardPayment) -> PGW.InstallmentPaymentBuilder
+  @objc public func build() -> PGW.InstallmentPayment
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class SecurePaySDK : ObjectiveC.NSObject {
+  @objc convenience public init(apiEnvironment: PGW.SecurePayAPIEnvironment)
+  @objc public init(apiEnvironment: PGW.SecurePayAPIEnvironment, enableLog: Swift.Bool)
+  @objc public func securePayToken(cardNo: Swift.String?, expiryMonth: Swift.Int, expiryYear: Swift.Int, securityCode: Swift.String?, pin: Swift.String?) -> Swift.String
+  @objc public func maskedCardNo() -> Swift.String
+  @objc override dynamic public init()
+  @objc deinit
+}
+public protocol PaddingProtocol {
+  func add(to: Swift.Array<Swift.UInt8>, blockSize: Swift.Int) -> Swift.Array<Swift.UInt8>
+  func remove(from: Swift.Array<Swift.UInt8>, blockSize: Swift.Int?) -> Swift.Array<Swift.UInt8>
+}
+public enum Padding : PGW.PaddingProtocol {
+  case noPadding, pkcs7
+  public func add(to: Swift.Array<Swift.UInt8>, blockSize: Swift.Int) -> Swift.Array<Swift.UInt8>
+  public func remove(from: Swift.Array<Swift.UInt8>, blockSize: Swift.Int?) -> Swift.Array<Swift.UInt8>
+  public static func == (a: PGW.Padding, b: PGW.Padding) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+@objc public class PaymentOptionRequest : PGW.BaseRequest {
+  @objc public var paymentToken: Swift.String!
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class TransactionRequestBuilder : ObjectiveC.NSObject {
+  @objc public init(paymentToken: Swift.String)
+  @objc public func paymentToken(_ paymentToken: Swift.String) -> PGW.TransactionRequestBuilder
+  @objc public func withCreditCardPayment(_ creditCardPayment: PGW.CreditCardPayment) -> PGW.TransactionRequestBuilder
+  @objc public func withInstallmentPayment(_ installmentPayment: PGW.InstallmentPayment) -> PGW.TransactionRequestBuilder
+  @objc public func withAlternativePayment(_ alternativePayment: PGW.AlternativePayment) -> PGW.TransactionRequestBuilder
+  @objc public func build() -> PGW.TransactionRequest
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class BaseRequest : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class BaseCardPaymentBuilder : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class APIResponseCode : ObjectiveC.NSObject {
+  @objc public static let API_SUCCESS: Swift.String
+  @objc public static let TRANSACTION_AUTHENTICATE: Swift.String
+  @objc public static let TRANSACTION_PAYMENT_SLIP: Swift.String
+  @objc public static let TRANSACTION_COMPLETED: Swift.String
+  @objc override dynamic public init()
+  @objc deinit
+}
+final public class AES {
+  public enum Error : Swift.Error {
+    case invalidKeySize
+    case dataPaddingRequired
+    case invalidData
+    public static func == (a: PGW.AES.Error, b: PGW.AES.Error) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+    public func hash(into hasher: inout Swift.Hasher)
+  }
+  public enum Variant : Swift.Int {
+    case aes128, aes192, aes256
+    public typealias RawValue = Swift.Int
+    public init?(rawValue: Swift.Int)
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  public static let blockSize: Swift.Int
+  final public let keySize: Swift.Int
+  final public let variant: PGW.AES.Variant
+  public init(key: Swift.Array<Swift.UInt8>, blockMode: PGW.BlockMode, padding: PGW.Padding = .pkcs7) throws
+  @objc deinit
+}
+extension AES : PGW.Cipher {
+  final public func encrypt(_ bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
+}
+@objc public class CardTypeCode : ObjectiveC.NSObject {
+  @objc public static let VISA: Swift.String
+  @objc public static let MASTER_CARD: Swift.String
+  @objc public static let AMEX: Swift.String
+  @objc public static let DINERS_CLUB: Swift.String
+  @objc public static let DISCOVER: Swift.String
+  @objc public static let JCB: Swift.String
+  @objc public static let KBZ: Swift.String
+  @objc public static let MPU: Swift.String
+  @objc public static let UNION_PAY: Swift.String
+  @objc override dynamic public init()
+  @objc deinit
+}
+public struct BlockModeOption : Swift.OptionSet {
+  public let rawValue: Swift.Int
+  public init(rawValue: Swift.Int)
+  public typealias Element = PGW.BlockModeOption
+  public typealias ArrayLiteralElement = PGW.BlockModeOption
+  public typealias RawValue = Swift.Int
+}
+@objc public class InterestTypeCode : ObjectiveC.NSObject {
+  @objc public static let NONE: Swift.String
+  @objc public static let CUSTOMER: Swift.String
+  @objc public static let MERCHANT: Swift.String
+  @objc override dynamic public init()
+  @objc deinit
+}
+public enum CipherError : Swift.Error {
+  case encrypt
+  case decrypt
+  public static func == (a: PGW.CipherError, b: PGW.CipherError) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public protocol Cipher : AnyObject {
+  var keySize: Swift.Int { get }
+  func encrypt(_ bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
+  func encrypt(_ bytes: Swift.Array<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
+}
+extension Cipher {
+  public func encrypt(_ bytes: Swift.Array<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
+}
+@objc public class Bank : PGW.BaseModel {
+  @objc public var name: Swift.String! {
+    get
+    }
+  @objc public var shortName: Swift.String! {
+    get
+    }
+  @objc public var terms: Swift.String! {
+    get
+    }
+  @objc public var bins: [Swift.String]! {
+    get
+    }
+  @objc public var logoUrl: Swift.String! {
+    get
+    }
+  @objc public var promoUrl: Swift.String! {
+    get
+    }
+  @objc public var plans: [PGW.Plan]! {
+    get
+    }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc final public class PGWWKWebViewDelegate : PGW.BaseModel {
+  @objc public init(success: @escaping PGW.response<PGW.TransactionResultResponse>, failure: @escaping PGW.failure)
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension PGWWKWebViewDelegate : WebKit.WKNavigationDelegate {
+  @objc final public func webView(_ webView: WebKit.WKWebView, decidePolicyFor navigationAction: WebKit.WKNavigationAction, decisionHandler: @escaping (WebKit.WKNavigationActionPolicy) -> Swift.Void)
+  @objc final public func webView(_ webView: WebKit.WKWebView, didFinish navigation: WebKit.WKNavigation)
+}
+@objc public class PaymentOptionDetailRequest : PGW.BaseRequest {
+  @objc public var paymentToken: Swift.String!
+  @objc public var paymentChannel: Swift.String
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class AgentChannel : PGW.BaseModel {
+  @objc public var code: Swift.String! {
+    get
+    }
+  @objc public var name: Swift.String! {
+    get
+    }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class AlternativePaymentBuilder : ObjectiveC.NSObject {
+  @objc public init(agentCode: Swift.String, channelCode: Swift.String)
+  @objc public func name(_ name: Swift.String) -> PGW.AlternativePaymentBuilder
+  @objc public func email(_ email: Swift.String) -> PGW.AlternativePaymentBuilder
+  @objc public func mobileNumber(_ number: Swift.String) -> PGW.AlternativePaymentBuilder
+  @objc public func build() -> PGW.AlternativePayment
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class CreditCardPayment : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension Data {
+  public func md5() -> Foundation.Data
+  public func sha256() -> Foundation.Data
+}
+extension Data {
+  public var bytes: Swift.Array<Swift.UInt8> {
+    get
+  }
+}
+@objc public class Constants : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension Constants {
+  @objc public static let JSON_NAME_ID: Swift.String
+  @objc public static let JSON_NAME_ENCRYPTED_CARD_DATA: Swift.String
+  @objc public static let JSON_NAME_CARD_TOKEN: Swift.String
+  @objc public static let JSON_NAME_INSTALLMENT_PERIOD: Swift.String
+  @objc public static let JSON_NAME_VERSION: Swift.String
+  @objc public static let JSON_NAME_PAYMENT_TOKEN: Swift.String
+  @objc public static let JSON_NAME_MERCHANT_ID: Swift.String
+  @objc public static let JSON_NAME_PAYMENT_CHANNEL: Swift.String
+  @objc public static let JSON_NAME_PAYMENT_PARAMS: Swift.String
+  @objc public static let JSON_NAME_CARD_DETAILS: Swift.String
+  @objc public static let JSON_NAME_STORE_CARD: Swift.String
+  @objc public static let JSON_NAME_INSTALLMENT_TRANSACTION: Swift.String
+  @objc public static let JSON_NAME_CARD_HOLDER_EMAIL: Swift.String
+  @objc public static let JSON_NAME_MOBILE_NO: Swift.String
+  @objc public static let JSON_NAME_PAN: Swift.String
+  @objc public static let JSON_NAME_EXPIRY: Swift.String
+  @objc public static let JSON_NAME_EXPIRY_MONTH: Swift.String
+  @objc public static let JSON_NAME_EXPIRY_YEAR: Swift.String
+  @objc public static let JSON_NAME_SECURITY_CODE: Swift.String
+  @objc public static let JSON_NAME_PAN_BANK: Swift.String
+  @objc public static let JSON_NAME_PAN_COUNTRY: Swift.String
+  @objc public static let JSON_NAME_CARD_HOLDER_NAME: Swift.String
+  @objc public static let JSON_NAME_AGENT_CODE: Swift.String
+  @objc public static let JSON_NAME_CHANNEL_CODE: Swift.String
+  @objc public static let JSON_NAME_CODE: Swift.String
+  @objc public static let JSON_NAME_BINS: Swift.String
+  @objc public static let JSON_NAME_CARD_TYPES: Swift.String
+  @objc public static let JSON_NAME_RESP_CODE: Swift.String
+  @objc public static let JSON_NAME_RESP_DESC: Swift.String
+  @objc public static let JSON_NAME_CREDIT_CARD: Swift.String
+  @objc public static let JSON_NAME_PREFIXES: Swift.String
+  @objc public static let JSON_NAME_NAME: Swift.String
+  @objc public static let JSON_NAME_ICON_URL: Swift.String
+  @objc public static let JSON_NAME_MIN_LENGTH: Swift.String
+  @objc public static let JSON_NAME_MAX_LENGTH: Swift.String
+  @objc public static let JSON_NAME_MERCHANT_DETAILS: Swift.String
+  @objc public static let JSON_NAME_TRANSACTION_DETAILS: Swift.String
+  @objc public static let JSON_NAME_PAYMENT_CHANNELS: Swift.String
+  @objc public static let JSON_NAME_INSTALLMENT: Swift.String
+  @objc public static let JSON_NAME_BANKS: Swift.String
+  @objc public static let JSON_NAME_SHORT_NAME: Swift.String
+  @objc public static let JSON_NAME_TERMS: Swift.String
+  @objc public static let JSON_NAME_LOGO_URL: Swift.String
+  @objc public static let JSON_NAME_PROMO_URL: Swift.String
+  @objc public static let JSON_NAME_PLANS: Swift.String
+  @objc public static let JSON_NAME_PERIOD: Swift.String
+  @objc public static let JSON_NAME_INTEREST_TYPE: Swift.String
+  @objc public static let JSON_NAME_INTEREST_RATE: Swift.String
+  @objc public static let JSON_NAME_MONTHLY_AMOUNT: Swift.String
+  @objc public static let JSON_NAME_MONTHLY_INTEREST: Swift.String
+  @objc public static let JSON_NAME_CURRENCY_CODE: Swift.String
+  @objc public static let JSON_NAME_LABEL: Swift.String
+  @objc public static let JSON_NAME_AMOUNT: Swift.String
+  @objc public static let JSON_NAME_INVOICE_NO: Swift.String
+  @objc public static let JSON_NAME_MERCHANT_NAME: Swift.String
+  @objc public static let JSON_NAME_ADDRESS: Swift.String
+  @objc public static let JSON_NAME_EMAIL: Swift.String
+  @objc public static let JSON_NAME_DESCRIPTION: Swift.String
+  @objc public static let JSON_NAME_TRANSACTION_ID: Swift.String
+  @objc public static let JSON_NAME_REDIRECT_URL: Swift.String
+  @objc public static let JSON_NAME_ALTERNATIVE_PAYMENT: Swift.String
+  @objc public static let JSON_NAME_OPTIONS: Swift.String
+  @objc public static let JSON_NAME_TYPE: Swift.String
+  @objc public static let JSON_NAME_AGENTS: Swift.String
+  @objc public static let JSON_NAME_CHANNELS: Swift.String
+  @objc public static let JSON_NAME_SLIP_URL: Swift.String
+  @objc public static let JSON_NAME_SIGNATURE: Swift.String
+  @objc public static let JSON_NAME_RETURN_URL: Swift.String
+}
+@objc public class AlternativeOptionDetail : PGW.BaseModel {
+  @objc public var agentOptions: [PGW.AgentOption]! {
+    get
+    }
+  @objc public func agents(agentType: Swift.String) -> [PGW.Agent]
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension AES : PGW.Cryptors {
+  final public func makeEncryptor() throws -> PGW.Updatable
+}
+public protocol CipherModeWorker {
+  var cipherOperation: PGW.CipherOperationOnBlock { get }
+  var additionalBufferSize: Swift.Int { get }
+  mutating func encrypt(block plaintext: Swift.ArraySlice<Swift.UInt8>) -> Swift.Array<Swift.UInt8>
+}
+public protocol BlockModeWorker : PGW.CipherModeWorker {
+  var blockSize: Swift.Int { get }
+}
+public protocol BlockModeWorkerFinalizing : PGW.BlockModeWorker {
+  mutating func finalize(encrypt ciphertext: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
+  mutating func willDecryptLast(block ciphertext: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.ArraySlice<Swift.UInt8>
+  mutating func didDecryptLast(block plaintext: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
+}
+extension Array {
+  public init(reserveCapacity: Swift.Int)
+}
+@objc public class AgentTypeCode : ObjectiveC.NSObject {
+  @objc public static let BANK: Swift.String
+  @objc public static let KIOSK: Swift.String
+  @objc public static let COUNTER: Swift.String
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class CardType : PGW.BaseModel {
+  @objc public var code: Swift.String! {
+    get
+    }
+  @objc public var name: Swift.String! {
+    get
+    }
+  @objc public var iconUrl: Swift.String! {
+    get
+    }
+  @objc public var prefixes: [Swift.String]! {
+    get
+    }
+  @objc public var minLength: Swift.Int {
+    @objc get
+  }
+  @objc public var maxLength: Swift.Int {
+    @objc get
+  }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class PaymentOptionResponse : PGW.BaseResponse {
+  @objc public var paymentToken: Swift.String! {
+    get
+    }
+  @objc public var merchantDetail: PGW.MerchantDetail! {
+    get
+    }
+  @objc public var channels: [PGW.Channel]! {
+    get
+    }
+  @objc public var transactionDetail: PGW.TransactionDetail! {
+    get
+    }
+  @objc override dynamic public init()
+  @objc deinit
+}
+final public class MD5 {
+  public init()
+  final public func calculate(for bytes: Swift.Array<Swift.UInt8>) -> Swift.Array<Swift.UInt8>
+  @objc deinit
+}
+extension MD5 : PGW.Updatable {
+  final public func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8>
+}
+@objc public class InstallmentOptionDetail : PGW.BaseModel {
+  @objc public var banks: [PGW.Bank]! {
+    get
+    }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class BaseResponse : PGW.BaseModel {
+  @objc public var version: Swift.String! {
+    get
+    }
+  @objc public var responseCode: Swift.String! {
+    get
+    }
+  @objc public var responseDescription: Swift.String! {
+    get
+    }
+  @objc override dynamic public init()
+  @objc deinit
+}
+public typealias CipherOperationOnBlock = (Swift.ArraySlice<Swift.UInt8>) -> Swift.Array<Swift.UInt8>?
+public protocol BlockMode {
+  var options: PGW.BlockModeOption { get }
+  func worker(blockSize: Swift.Int, cipherOperation: @escaping PGW.CipherOperationOnBlock) throws -> PGW.CipherModeWorker
+}
+final public class SHA2 {
+  public enum Variant : Swift.RawRepresentable {
+    case sha256
+    public var digestLength: Swift.Int {
+      get
+    }
+    public var blockSize: Swift.Int {
+      get
+    }
+    public typealias RawValue = Swift.Int
+    public var rawValue: PGW.SHA2.Variant.RawValue {
+      get
+    }
+    public init?(rawValue: PGW.SHA2.Variant.RawValue)
+  }
+  public init(variant: PGW.SHA2.Variant)
+  final public func calculate(for bytes: Swift.Array<Swift.UInt8>) -> Swift.Array<Swift.UInt8>
+  @objc deinit
+}
+extension SHA2 : PGW.Updatable {
+  final public func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8>
+}
+@objc public class MerchantDetail : PGW.BaseModel {
+  @objc public var name: Swift.String! {
+    get
+    }
+  @objc public var address: Swift.String? {
+    get
+    }
+  @objc public var iconUrl: Swift.String? {
+    get
+    }
+  @objc public var email: Swift.String? {
+    get
+    }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class CreditCardPaymentBuilder : PGW.BaseCardPaymentBuilder {
+  @objc public init(pan: Swift.String)
+  @objc public func securityCode(_ securityCode: Swift.String) -> PGW.CreditCardPaymentBuilder
+  @objc public func expiryMonth(_ month: Swift.Int) -> PGW.CreditCardPaymentBuilder
+  @objc public func expiryYear(_ year: Swift.Int) -> PGW.CreditCardPaymentBuilder
+  @objc public func bank(_ bank: Swift.String) -> PGW.CreditCardPaymentBuilder
+  @objc public func country(_ country: Swift.String) -> PGW.CreditCardPaymentBuilder
+  @objc public func name(_ name: Swift.String) -> PGW.CreditCardPaymentBuilder
+  @objc public func email(_ email: Swift.String) -> PGW.CreditCardPaymentBuilder
+  @objc public func mobileNumber(_ mobileNumber: Swift.String) -> PGW.CreditCardPaymentBuilder
+  @objc public func storeCard(_ storeCard: Swift.Bool) -> PGW.CreditCardPaymentBuilder
+  @objc public func build() -> PGW.CreditCardPayment
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class Plan : PGW.BaseModel {
+  @objc public var interestType: Swift.String! {
+    get
+    }
+  @objc public var currencyCode: Swift.String! {
+    get
+    }
+  @objc public var label: Swift.String! {
+    get
+    }
+  @objc public var period: Swift.Int {
+    @objc get
+  }
+  @objc public var interestRate: Swift.Double {
+    @objc get
+  }
+  @objc public var monthlyAmount: Swift.Double {
+    @objc get
+  }
+  @objc public var monthlyInterest: Swift.Double {
+    @objc get
+  }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class TransactionResultResponse : PGW.BaseResponse {
+  @objc public var paymentChannel: Swift.String! {
+    get
+    }
+  @objc public var agentCode: Swift.String? {
+    get
+    }
+  @objc public var channelCode: Swift.String? {
+    get
+    }
+  @objc public var transactionID: Swift.String? {
+    get
+    }
+  @objc public var redirectUrl: Swift.String? {
+    get
+    }
+  @objc public var slipUrl: Swift.String? {
+    get
+    }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class CreditCardOptionDetail : PGW.BaseModel {
+  @objc public var bins: [Swift.String]! {
+    get
+    }
+  @objc public var cardTypes: [PGW.CardType]! {
+    get
+    }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class TransactionRequest : PGW.BaseRequest {
+  @objc override dynamic public init()
+  @objc deinit
+}
+public struct CBC : PGW.BlockMode {
+  public enum Error : Swift.Error {
+    case invalidInitializationVector
+    public static func == (a: PGW.CBC.Error, b: PGW.CBC.Error) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+    public func hash(into hasher: inout Swift.Hasher)
+  }
+  public let options: PGW.BlockModeOption
+  public init(iv: Swift.Array<Swift.UInt8>)
+  public func worker(blockSize: Swift.Int, cipherOperation: @escaping PGW.CipherOperationOnBlock) throws -> PGW.CipherModeWorker
+}
+@objc public class BaseModel : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc deinit
+}
+public protocol Updatable {
+  mutating func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool) throws -> Swift.Array<Swift.UInt8>
+  mutating func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
+}
+extension Updatable {
+  mutating public func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
+  mutating public func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8>
+  mutating public func update(withBytes bytes: Swift.Array<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8>
+  mutating public func update(withBytes bytes: Swift.Array<Swift.UInt8>, isLast: Swift.Bool = false, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
+  mutating public func finish(withBytes bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
+  mutating public func finish(withBytes bytes: Swift.Array<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
+  mutating public func finish() throws -> Swift.Array<Swift.UInt8>
+  mutating public func finish(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
+  mutating public func finish(withBytes bytes: Swift.Array<Swift.UInt8>, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
+  mutating public func finish(output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
+}
+@objc public class AlternativePayment : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class TransactionDetail : PGW.BaseModel {
+  @objc public var amount: Swift.String! {
+    get
+    }
+  @objc public var currencyCode: Swift.String! {
+    get
+    }
+  @objc public var invoiceNo: Swift.String! {
+    get
+    }
+  @objc public var productDescription: Swift.String! {
+    get
+    }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class Channel : PGW.BaseModel {
+  @objc public var name: Swift.String! {
+    get
+    }
+  @objc public var iconUrl: Swift.String! {
+    get
+    }
+  @objc public func paymentChannel() -> Swift.String
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class PaymentChannel : ObjectiveC.NSObject {
+  @objc public static let NONE: Swift.String
+  @objc public static let CREDIT_CARD: Swift.String
+  @objc public static let INSTALLMENT: Swift.String
+  @objc public static let ALTERNATIVE_PAYMENT: Swift.String
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class Agent : PGW.BaseModel {
+  @objc public var code: Swift.String! {
+    get
+    }
+  @objc public var name: Swift.String! {
+    get
+    }
+  @objc public var logoUrl: Swift.String! {
+    get
+    }
+  @objc public var agentChannels: [PGW.AgentChannel]! {
+    get
+    }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@available(*, renamed: "Digest")
+public typealias Hash = PGW.Digest
+public struct Digest {
+  public static func md5(_ bytes: Swift.Array<Swift.UInt8>) -> Swift.Array<Swift.UInt8>
+  public static func sha256(_ bytes: Swift.Array<Swift.UInt8>) -> Swift.Array<Swift.UInt8>
+  public static func sha2(_ bytes: Swift.Array<Swift.UInt8>, variant: PGW.SHA2.Variant) -> Swift.Array<Swift.UInt8>
+}
+@objc public class PGWSDKBuilder : ObjectiveC.NSObject {
+  @objc public var apiEnvironment: PGW.APIEnvironment {
+    get
+    }
+  @objc public func apiEnvironment(_ apiEnvironment: PGW.APIEnvironment) -> PGW.PGWSDKBuilder
+  @objc public func merchantID(_ merchantID: Swift.String) -> PGW.PGWSDKBuilder
+  @objc public func enableLog(_ enableLog: Swift.Bool) -> PGW.PGWSDKBuilder
+  @discardableResult
+  @objc public func initialize() -> PGW.PGWSDK?
+  @objc deinit
+}
+@objc public enum SecurePayAPIEnvironment : Swift.Int {
+  case PRODUCTION, SANDBOX
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public class AgentOption : PGW.BaseModel {
+  @objc public var type: Swift.String! {
+    get
+    }
+  @objc public var agents: [PGW.Agent]! {
+    get
+    }
+  @objc override dynamic public init()
+  @objc deinit
+}
+public enum PKCS7 {
+}
+public protocol Cryptors : AnyObject {
+  func makeEncryptor() throws -> PGW.Updatable
+}
+@objc public class PGWSDK : PGW.PGWSDKBuilder {
+  @objc public static let shared: PGW.PGWSDK
+  @objc public class func builder() -> PGW.PGWSDKBuilder
+  @objc public func paymentOption(paymentOptionRequest request: PGW.PaymentOptionRequest, success: @escaping PGW.response<PGW.PaymentOptionResponse>, failure: @escaping PGW.failure)
+  @objc public func paymentOptionDetail(paymentOptionDetailRequest request: PGW.PaymentOptionDetailRequest, success: @escaping PGW.response<PGW.PaymentOptionDetailResponse>, failure: @escaping PGW.failure)
+  @objc public func proceedTransaction(transactionRequest request: PGW.TransactionRequest, success: @escaping PGW.response<PGW.TransactionResultResponse>, failure: @escaping PGW.failure)
+  @objc deinit
+}
+@objc public enum APIEnvironment : Swift.Int {
+  case PRODUCTION, PRODUCTION_INDONESIA, SANDBOX
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension PGW.Padding : Swift.Equatable {}
+extension PGW.Padding : Swift.Hashable {}
+extension PGW.AES.Error : Swift.Equatable {}
+extension PGW.AES.Error : Swift.Hashable {}
+extension PGW.AES.Variant : Swift.Equatable {}
+extension PGW.AES.Variant : Swift.Hashable {}
+extension PGW.AES.Variant : Swift.RawRepresentable {}
+extension PGW.CipherError : Swift.Equatable {}
+extension PGW.CipherError : Swift.Hashable {}
+extension PGW.SHA2.Variant : Swift.Equatable {}
+extension PGW.SHA2.Variant : Swift.Hashable {}
+extension PGW.CBC.Error : Swift.Equatable {}
+extension PGW.CBC.Error : Swift.Hashable {}
+extension PGW.SecurePayAPIEnvironment : Swift.Hashable {}
+extension PGW.SecurePayAPIEnvironment : Swift.RawRepresentable {}
+extension PGW.APIEnvironment : Swift.Hashable {}
+extension PGW.APIEnvironment : Swift.RawRepresentable {}
