@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () async {
                   var response = await CcppFlutterPlugin.paymentWithCreditCard(
                     paymentToken: paymentToken,
-                    creditCardNumber: '4242424242424242',
+                    creditCardNumber: '4111111111111111',
                     expiryMonth: 7,
                     expiryYear: 2024,
                     cvv: cvv,

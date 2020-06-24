@@ -1,4 +1,4 @@
-package android.src.main.kotlin.co.ichob.ccppflutterplugin
+package co.ichob.ccppflutterplugin
 
 import android.app.Activity
 import android.content.Intent
@@ -36,11 +36,6 @@ class WebViewFragment : Fragment() {
 
         webView.loadUrl(mRedirectUrl)
         return webView
-    }
-
-    override fun onDestroyView() {
-        activity?.setResult(Activity.RESULT_CANCELED)
-        super.onDestroyView()
     }
 
     private val mTransactionResultCallback: TransactionResultCallback = object : TransactionResultCallback {

@@ -31,7 +31,7 @@ public class SwiftCcppFlutterPlugin: NSObject, FlutterPlugin, Transaction3DSDele
                     .merchantID(merchantId)
                     .apiEnvironment(apiEnv)
                     .initialize();
-                result([String:Any]())
+                result(nil)
             case "paymentWithCreditCard":
                 let args = call.arguments as! Dictionary<String, Any>
                 let paymentToken = args["paymentToken"] as! String
@@ -95,12 +95,14 @@ public class SwiftCcppFlutterPlugin: NSObject, FlutterPlugin, Transaction3DSDele
                                        success: { (response:TransactionResultResponse) in
         //For 3DS
         if response.responseCode == APIResponseCode.TRANSACTION_AUTHENTICATE {
-          let redirectUrl:String = response.redirectUrl!
-          let webView = WKWebViewController()
-          webView.redirectUrl = redirectUrl
-          webView.transaction3dsDelegate = self
-          let nav = UINavigationController.init(rootViewController: webView)
-          self.viewController?.present(nav, animated: true, completion: nil)
+            let redirectUrl:String = response.redirectUrl!
+            let webView = WKWebViewController()
+            webView.redirectUrl = redirectUrl
+            webView.transaction3dsDelegate = self
+            
+            let nav = UINavigationController.init(rootViewController: webView)
+            nav.modalPresentationStyle = .fullScreen
+            self.viewController?.present(nav, animated: true, completion: nil)
           
         } else if response.responseCode == APIResponseCode.TRANSACTION_COMPLETED {
             //Inquiry payment result by using transaction id.
@@ -173,13 +175,16 @@ class WKWebViewController: UIViewController {
                 //Inquiry payment result by using transaction id.
                 let transactionID:String = response.transactionID!
                 self.transaction3dsDelegate.onTransactionResult(transactionID, nil)
+                self.dismiss(animated: true, completion: nil)
             } else {
                 //Get error response and display error
                 self.transaction3dsDelegate.onTransactionResult(nil, response.responseDescription!)
+                self.dismiss(animated: true, completion: nil)
             }
         }, failure: { (error: NSError) in
             //Get error response and display error
             self.transaction3dsDelegate.onTransactionResult(nil, error.description)
+            self.dismiss(animated: true, completion: nil)
         })
         return self.pgwWebViewDelegate
     }

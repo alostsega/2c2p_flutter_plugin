@@ -1,18 +1,39 @@
 package co.ichob.ccppflutterplugin
 
 import android.os.Bundle
-import android.src.main.kotlin.co.ichob.ccppflutterplugin.WebViewFragment
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
 class WebViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(android.R.style.Theme_DeviceDefault_Light_NoActionBar)
         super.onCreate(savedInstanceState)
-        val i = intent
-        val redirect = i.getStringExtra("redirect")
+        setContentView(R.layout.activity_web_view)
+
+        initToolbar()
+        initFragment()
+    }
+
+    private fun initToolbar() {
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    private fun initFragment() {
+        val redirect = intent.getStringExtra("redirect")
         val fragment: WebViewFragment = WebViewFragment.newInstance(redirect)
         supportFragmentManager.beginTransaction()
-                .add(android.R.id.content, fragment, "")
+                .add(R.id.content, fragment, "")
                 .commit()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

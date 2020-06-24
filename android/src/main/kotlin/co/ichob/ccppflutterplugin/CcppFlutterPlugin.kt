@@ -3,7 +3,6 @@ package co.ichob.ccppflutterplugin
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import com.ccpp.pgw.sdk.android.builder.CardTokenPaymentBuilder
 import com.ccpp.pgw.sdk.android.builder.CreditCardPaymentBuilder
 import com.ccpp.pgw.sdk.android.builder.TransactionRequestBuilder
@@ -21,11 +20,8 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
-import io.flutter.plugin.common.PluginRegistry.Registrar
-import java.util.*
-import kotlin.collections.HashMap
 
-class CcppFlutterPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware, ActivityResultListener {
+class CcppFlutterPlugin : MethodCallHandler, FlutterPlugin, ActivityAware, ActivityResultListener {
     private var activity: Activity? = null
     private var applicationContext: Context? = null
     private var result: MethodChannel.Result? = null
@@ -41,7 +37,8 @@ class CcppFlutterPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware, Act
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        activity = binding.activity;
+        binding.addActivityResultListener(this)
+        activity = binding.activity
         methodChannel?.setMethodCallHandler(this)
     }
 
@@ -54,6 +51,7 @@ class CcppFlutterPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware, Act
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        binding.addActivityResultListener(this)
         activity = binding.activity
     }
 
@@ -73,8 +71,7 @@ class CcppFlutterPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware, Act
                         .setMerchantID(merchantId)
                         .setAPIEnvironment(environment)
                         .init()
-                val response = emptyMap<String, Any>()
-                result.success(response)
+                result.success(null)
             }
             "paymentWithCreditCard" -> {
                 val paymentToken = call.argument<String>("paymentToken") ?: ""
@@ -163,11 +160,11 @@ class CcppFlutterPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware, Act
         })
     }
     
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent): Boolean {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?): Boolean {
         if (requestCode == CCPP_AUTH_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                val transactionId = intent.getStringExtra("transactionId")
-                val errorMessage = intent.getStringExtra("errorMessage")
+                val transactionId = intent?.getStringExtra("transactionId")
+                val errorMessage = intent?.getStringExtra("errorMessage")
 
                 val response = mapOf<String, Any?>(
                         "transactionId" to transactionId,
