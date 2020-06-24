@@ -22,6 +22,8 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import io.flutter.plugin.common.PluginRegistry.Registrar
+import java.util.*
+import kotlin.collections.HashMap
 
 class CcppFlutterPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware, ActivityResultListener {
     private var activity: Activity? = null
@@ -71,7 +73,8 @@ class CcppFlutterPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware, Act
                         .setMerchantID(merchantId)
                         .setAPIEnvironment(environment)
                         .init()
-                result.success("initialize success")
+                val response = emptyMap<String, Any>()
+                result.success(response)
             }
             "paymentWithCreditCard" -> {
                 val paymentToken = call.argument<String>("paymentToken") ?: ""
@@ -126,12 +129,12 @@ class CcppFlutterPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware, Act
 
     private fun proceedTransaction(result: MethodChannel.Result, transactionRequest: TransactionRequest) {
         PGWSDK.getInstance().proceedTransaction(transactionRequest, object : TransactionResultCallback {
-            override fun onResponse(response: TransactionResultResponse) {
+            override fun onResponse(transactionResultResponse: TransactionResultResponse) {
 
                 //For 3DS
-                when (response.responseCode) {
+                when (transactionResultResponse.responseCode) {
                     APIResponseCode.TRANSACTION_AUTHENTICATE -> {
-                        val redirectUrl = response.redirectUrl
+                        val redirectUrl = transactionResultResponse.redirectUrl
                         val i = Intent(activity, WebViewActivity::class.java)
                         i.putExtra("redirect", redirectUrl)
                         activity?.startActivityForResult(i, CCPP_AUTH_REQUEST_CODE) //Open WebView for 3DS
@@ -139,21 +142,23 @@ class CcppFlutterPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware, Act
                     APIResponseCode.TRANSACTION_COMPLETED -> {
 
                         //Inquiry payment result by using transaction id.
-                        val transactionID = response.transactionID
-                        result.success(transactionID)
+                        val transactionID = transactionResultResponse.transactionID
+                        
+                        val response = mapOf<String, Any>("transactionId" to transactionID)
+                        result.success(response)
                     }
                     else -> {
                         //Get error response and display error
-//                        result.error("ERROR", response.responseDescription, null)
-                        result.success("ERROR " + response.responseDescription)
+                        val response = mapOf<String, Any>("errorMessage" to transactionResultResponse.responseDescription)
+                        result.success(response)
                     }
                 }
             }
 
             override fun onFailure(error: Throwable) {
                 //Get error response and display error
-//                result.error("ERROR", error.message, null)
-                result.success("ERROR " + error.message)
+                val response = mapOf<String, Any>("errorMessage" to (error.message ?: "Unknown error"))
+                result.success(response)
             }
         })
     }
@@ -161,8 +166,14 @@ class CcppFlutterPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware, Act
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent): Boolean {
         if (requestCode == CCPP_AUTH_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                val res = intent.getStringExtra("result")
-                result?.success(res)
+                val transactionId = intent.getStringExtra("transactionId")
+                val errorMessage = intent.getStringExtra("errorMessage")
+
+                val response = mapOf<String, Any?>(
+                        "transactionId" to transactionId,
+                        "errorMessage" to errorMessage
+                )
+                result?.success(response)
                 return true
             }
             return true

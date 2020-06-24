@@ -29,6 +29,7 @@ class WebViewFragment : Fragment() {
         webView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
         webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
         webView.webViewClient = PGWWebViewClient()
         webView.addJavascriptInterface(PGWJavaScriptInterface(mTransactionResultCallback),
                 PGWJavaScriptInterface.JAVASCRIPT_TRANSACTION_RESULT_KEY)
@@ -47,21 +48,24 @@ class WebViewFragment : Fragment() {
             if (response.responseCode == APIResponseCode.TRANSACTION_COMPLETED) {
                 val transactionID = response.transactionID
                 val result = Intent()
-                result.putExtra("result", transactionID)
+                result.putExtra("transactionId", transactionID)
                 activity?.setResult(Activity.RESULT_OK, result)
+                activity?.finish()
             } else {
                 //Get error response and display error
                 val result = Intent()
-                result.putExtra("result", response.responseDescription)
+                result.putExtra("errorMessage", response.responseDescription)
                 activity?.setResult(Activity.RESULT_OK, result)
+                activity?.finish()
             }
         }
 
         override fun onFailure(error: Throwable) {
             //Get error response and display error
             val result = Intent()
-            result.putExtra("result", error.message)
+            result.putExtra("errorMessage", error.message)
             activity?.setResult(Activity.RESULT_OK, result)
+            activity?.finish()
         }
     }
 

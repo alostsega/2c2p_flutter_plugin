@@ -31,7 +31,7 @@ public class SwiftCcppFlutterPlugin: NSObject, FlutterPlugin, Transaction3DSDele
                     .merchantID(merchantId)
                     .apiEnvironment(apiEnv)
                     .initialize();
-                result("initialize success")
+                result([String:Any]())
             case "paymentWithCreditCard":
                 let args = call.arguments as! Dictionary<String, Any>
                 let paymentToken = args["paymentToken"] as! String
@@ -103,28 +103,31 @@ public class SwiftCcppFlutterPlugin: NSObject, FlutterPlugin, Transaction3DSDele
           self.viewController?.present(nav, animated: true, completion: nil)
           
         } else if response.responseCode == APIResponseCode.TRANSACTION_COMPLETED {
-          //Inquiry payment result by using transaction id.
-          let transactionID:String = response.transactionID!
-          self.result!(transactionID)
-          
+            //Inquiry payment result by using transaction id.
+            let transactionId = response.transactionID!
+            let response = ["transactionId": transactionId]
+            self.result!(response)
         } else {
-          //Get error response and display error
-          self.result!("ERROR " + response.responseDescription!)
-          
+            //Get error response and display error
+            let response = ["errorMessage": response.responseDescription]
+            self.result!(response)
         }
                                         
         }) { (error:NSError) in
             //Get error response and display error
-          self.result!("ERROR " + error.description)
+            let response = ["errorMessage": error.description]
+            self.result!(response)
         }
     }
     
     func onTransactionResult(_ transactionId: String?, _ errorMessage: String?) {
-        if(transactionId != nil){
-          self.result!(transactionId)
+        if(transactionId != nil) {
+            let response = ["transactionId": transactionId]
+            self.result!(response)
         }
         else{
-          self.result!("ERROR " + errorMessage!)
+            let response = ["errorMessage": errorMessage]
+            self.result!(response)
         }
     }
 }

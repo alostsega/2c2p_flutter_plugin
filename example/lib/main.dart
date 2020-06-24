@@ -1,7 +1,6 @@
+import 'package:ccppflutterplugin/ccppflutterplugin.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-import 'package:ccppflutterplugin/ccppflutterplugin.dart';
 
 void main() async {
   runApp(MyApp());
@@ -24,7 +23,7 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initCcppPlugin() async {
     await CcppFlutterPlugin.initialize(
-      merchantId: 'JT01',
+      merchantId: 'MERCHANT_ID',
       isSandbox: true,
     );
   }
@@ -44,8 +43,7 @@ class _MyAppState extends State<MyApp> {
               RaisedButton(
                 child: Text('pay'),
                 onPressed: () async {
-                  var transactionId =
-                      await CcppFlutterPlugin.paymentWithCreditCard(
+                  var response = await CcppFlutterPlugin.paymentWithCreditCard(
                     paymentToken: paymentToken,
                     creditCardNumber: '4242424242424242',
                     expiryMonth: 7,
@@ -53,18 +51,20 @@ class _MyAppState extends State<MyApp> {
                     cvv: cvv,
                     storeCard: true,
                   );
-                  print(transactionId);
+                  print('transactionId: ${response.transactionId}');
+                  print('error: ${response.errorMessage}');
                 },
               ),
               RaisedButton(
                 child: Text('pay with token'),
                 onPressed: () async {
-                  var transactionId = await CcppFlutterPlugin.paymentWithToken(
+                  var response = await CcppFlutterPlugin.paymentWithToken(
                     paymentToken: paymentToken,
                     cardToken: 'CARD_TOKEN',
                     cvv: cvv,
                   );
-                  print(transactionId);
+                  print('transactionId: ${response.transactionId}');
+                  print('error: ${response.errorMessage}');
                 },
               ),
             ],

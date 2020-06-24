@@ -1,22 +1,24 @@
 import 'dart:async';
 
+import 'package:ccppflutterplugin/ccpp_result.dart';
 import 'package:flutter/services.dart';
 
 class CcppFlutterPlugin {
   static const MethodChannel _channel = const MethodChannel('co.ichob/ccpp');
 
-  static Future<void> initialize({
+  static Future<CcppResult> initialize({
     String merchantId,
     bool isSandbox,
   }) async {
-    var result = await _channel.invokeMethod('initialize', {
+    var response = await _channel.invokeMethod('initialize', {
       'merchantId': merchantId,
       'isSandBox': isSandbox,
     });
-    print(result);
+
+    return CcppResult.fromJson(Map<String, dynamic>.from(response));
   }
 
-  static Future<String> paymentWithCreditCard({
+  static Future<CcppResult> paymentWithCreditCard({
     String paymentToken,
     String creditCardNumber,
     int expiryMonth,
@@ -32,12 +34,11 @@ class CcppFlutterPlugin {
       'cvv': cvv,
       'storeCard': storeCard,
     };
-    var transactionId =
-        await _channel.invokeMethod('paymentWithCreditCard', args);
-    return transactionId;
+    var response = await _channel.invokeMethod('paymentWithCreditCard', args);
+    return CcppResult.fromJson(Map<String, dynamic>.from(response));
   }
 
-  static Future<String> paymentWithToken({
+  static Future<CcppResult> paymentWithToken({
     String paymentToken,
     String cardToken,
     String cvv,
@@ -47,7 +48,7 @@ class CcppFlutterPlugin {
       'cardToken': cardToken,
       'cvv': cvv
     };
-    var transactionId = await _channel.invokeMethod('paymentWithToken', args);
-    return transactionId;
+    var response = await _channel.invokeMethod('paymentWithToken', args);
+    return CcppResult.fromJson(Map<String, dynamic>.from(response));
   }
 }
