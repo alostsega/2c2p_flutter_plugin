@@ -6,16 +6,14 @@ import 'package:flutter/services.dart';
 class CcppFlutterPlugin {
   static const MethodChannel _channel = const MethodChannel('co.ichob/ccpp');
 
-  static Future<CcppResult> initialize({
+  static Future<void> initialize({
     String merchantId,
     bool isSandbox,
   }) async {
-    var response = await _channel.invokeMethod('initialize', {
+    await _channel.invokeMethod('initialize', {
       'merchantId': merchantId,
       'isSandBox': isSandbox,
     });
-
-    return CcppResult.fromJson(Map<String, dynamic>.from(response));
   }
 
   static Future<CcppResult> paymentWithCreditCard({
