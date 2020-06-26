@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="co.ichob.ccppflutterplugin">
 
-    <application
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".WebViewActivity" />
+    <application>
+        <activity android:name=".WebViewActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>
