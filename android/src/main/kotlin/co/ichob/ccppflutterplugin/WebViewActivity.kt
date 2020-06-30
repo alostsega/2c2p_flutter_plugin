@@ -1,5 +1,7 @@
 package co.ichob.ccppflutterplugin
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +14,13 @@ class WebViewActivity : AppCompatActivity() {
 
         initToolbar()
         initFragment()
+    }
+
+    override fun onBackPressed() {
+        val result = Intent()
+        result.putExtra("errorMessage", "Canceled")
+        setResult(Activity.RESULT_OK, result)
+        finish()
     }
 
     private fun initToolbar() {
@@ -32,7 +41,7 @@ class WebViewActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == android.R.id.home) {
-            finish()
+            onBackPressed()
         }
         return super.onOptionsItemSelected(item)
     }

@@ -148,7 +148,7 @@ class WKWebViewController: UIViewController {
     @objc
     func cancel(sender: UIBarButtonItem){
         self.dismiss(animated: true, completion: nil)
-        self.transaction3dsDelegate.onTransactionResult(nil, "Cancelled")
+        self.transaction3dsDelegate.onTransactionResult(nil, "Canceled")
     }
 
     override func viewDidLoad() {
