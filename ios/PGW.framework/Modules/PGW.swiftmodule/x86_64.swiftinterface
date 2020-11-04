@@ -1,14 +1,14 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.1.3 (swiftlang-1100.0.282.1 clang-1100.0.33.15)
+// swift-compiler-version: Apple Swift version 5.3 (swiftlang-1200.0.29.2 clang-1200.0.30.1)
 // swift-module-flags: -target x86_64-apple-ios11.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name PGW
 import Darwin
 import Foundation
 import Swift
 import UIKit
 import WebKit
-@objc public class InstallmentPayment : ObjectiveC.NSObject {
-  @objc override dynamic public init()
+@_inheritsConvenienceInitializers @objc public class InstallmentPayment : ObjectiveC.NSObject {
   @objc deinit
+  @objc override dynamic public init()
 }
 @objc public class CardTokenPaymentBuilder : PGW.BaseCardPaymentBuilder {
   @objc public init(cardToken: Swift.String)
@@ -19,24 +19,24 @@ import WebKit
   @objc public func mobileNumber(_ mobileNumber: Swift.String) -> PGW.CardTokenPaymentBuilder
   @objc public func cardToken(_ cardToken: Swift.String) -> PGW.CardTokenPaymentBuilder
   @objc public func build() -> PGW.CreditCardPayment
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class PaymentOptionDetailResponse : PGW.BaseResponse {
+@_inheritsConvenienceInitializers @objc public class PaymentOptionDetailResponse : PGW.BaseResponse {
   @objc public var paymentChannel: Swift.String! {
     get
-    }
+  }
   @objc public var creditCardOptionDetails: PGW.CreditCardOptionDetail? {
     get
-    }
+  }
   @objc public var installmentOptionDetail: PGW.InstallmentOptionDetail? {
     get
-    }
+  }
   @objc public var alternativeOptionDetail: PGW.AlternativeOptionDetail? {
     get
-    }
-  @objc override dynamic public init()
+  }
   @objc deinit
+  @objc override dynamic public init()
 }
 public typealias response<T> = (T) -> ()
 public typealias failure = (Foundation.NSError) -> ()
@@ -44,16 +44,16 @@ public typealias failure = (Foundation.NSError) -> ()
   @objc public init(period: Swift.Int)
   @objc public func withCreditCardPayment(_ creditCardPayment: PGW.CreditCardPayment) -> PGW.InstallmentPaymentBuilder
   @objc public func build() -> PGW.InstallmentPayment
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
 @objc public class SecurePaySDK : ObjectiveC.NSObject {
   @objc convenience public init(apiEnvironment: PGW.SecurePayAPIEnvironment)
   @objc public init(apiEnvironment: PGW.SecurePayAPIEnvironment, enableLog: Swift.Bool)
   @objc public func securePayToken(cardNo: Swift.String?, expiryMonth: Swift.Int, expiryYear: Swift.Int, securityCode: Swift.String?, pin: Swift.String?) -> Swift.String
   @objc public func maskedCardNo() -> Swift.String
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
 public protocol PaddingProtocol {
   func add(to: Swift.Array<Swift.UInt8>, blockSize: Swift.Int) -> Swift.Array<Swift.UInt8>
@@ -69,10 +69,10 @@ public enum Padding : PGW.PaddingProtocol {
   }
   public func hash(into hasher: inout Swift.Hasher)
 }
-@objc public class PaymentOptionRequest : PGW.BaseRequest {
+@_inheritsConvenienceInitializers @objc public class PaymentOptionRequest : PGW.BaseRequest {
   @objc public var paymentToken: Swift.String!
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
 @objc public class TransactionRequestBuilder : ObjectiveC.NSObject {
   @objc public init(paymentToken: Swift.String)
@@ -81,24 +81,24 @@ public enum Padding : PGW.PaddingProtocol {
   @objc public func withInstallmentPayment(_ installmentPayment: PGW.InstallmentPayment) -> PGW.TransactionRequestBuilder
   @objc public func withAlternativePayment(_ alternativePayment: PGW.AlternativePayment) -> PGW.TransactionRequestBuilder
   @objc public func build() -> PGW.TransactionRequest
+  @objc deinit
+  @objc override dynamic public init()
+}
+@objc @_inheritsConvenienceInitializers public class BaseRequest : ObjectiveC.NSObject {
   @objc override dynamic public init()
   @objc deinit
 }
-@objc public class BaseRequest : ObjectiveC.NSObject {
+@objc @_inheritsConvenienceInitializers public class BaseCardPaymentBuilder : ObjectiveC.NSObject {
   @objc override dynamic public init()
   @objc deinit
 }
-@objc public class BaseCardPaymentBuilder : ObjectiveC.NSObject {
-  @objc override dynamic public init()
-  @objc deinit
-}
-@objc public class APIResponseCode : ObjectiveC.NSObject {
+@_inheritsConvenienceInitializers @objc public class APIResponseCode : ObjectiveC.NSObject {
   @objc public static let API_SUCCESS: Swift.String
   @objc public static let TRANSACTION_AUTHENTICATE: Swift.String
   @objc public static let TRANSACTION_PAYMENT_SLIP: Swift.String
   @objc public static let TRANSACTION_COMPLETED: Swift.String
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
 final public class AES {
   public enum Error : Swift.Error {
@@ -128,7 +128,7 @@ final public class AES {
 extension AES : PGW.Cipher {
   final public func encrypt(_ bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
 }
-@objc public class CardTypeCode : ObjectiveC.NSObject {
+@_inheritsConvenienceInitializers @objc public class CardTypeCode : ObjectiveC.NSObject {
   @objc public static let VISA: Swift.String
   @objc public static let MASTER_CARD: Swift.String
   @objc public static let AMEX: Swift.String
@@ -138,8 +138,8 @@ extension AES : PGW.Cipher {
   @objc public static let KBZ: Swift.String
   @objc public static let MPU: Swift.String
   @objc public static let UNION_PAY: Swift.String
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
 public struct BlockModeOption : Swift.OptionSet {
   public let rawValue: Swift.Int
@@ -148,12 +148,12 @@ public struct BlockModeOption : Swift.OptionSet {
   public typealias ArrayLiteralElement = PGW.BlockModeOption
   public typealias RawValue = Swift.Int
 }
-@objc public class InterestTypeCode : ObjectiveC.NSObject {
+@_inheritsConvenienceInitializers @objc public class InterestTypeCode : ObjectiveC.NSObject {
   @objc public static let NONE: Swift.String
   @objc public static let CUSTOMER: Swift.String
   @objc public static let MERCHANT: Swift.String
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
 public enum CipherError : Swift.Error {
   case encrypt
@@ -172,55 +172,55 @@ public protocol Cipher : AnyObject {
 extension Cipher {
   public func encrypt(_ bytes: Swift.Array<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
 }
-@objc public class Bank : PGW.BaseModel {
+@_inheritsConvenienceInitializers @objc public class Bank : PGW.BaseModel {
   @objc public var name: Swift.String! {
     get
-    }
+  }
   @objc public var shortName: Swift.String! {
     get
-    }
+  }
   @objc public var terms: Swift.String! {
     get
-    }
+  }
   @objc public var bins: [Swift.String]! {
     get
-    }
+  }
   @objc public var logoUrl: Swift.String! {
     get
-    }
+  }
   @objc public var promoUrl: Swift.String! {
     get
-    }
+  }
   @objc public var plans: [PGW.Plan]! {
     get
-    }
-  @objc override dynamic public init()
+  }
   @objc deinit
+  @objc override dynamic public init()
 }
 @objc final public class PGWWKWebViewDelegate : PGW.BaseModel {
   @objc public init(success: @escaping PGW.response<PGW.TransactionResultResponse>, failure: @escaping PGW.failure)
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
 extension PGWWKWebViewDelegate : WebKit.WKNavigationDelegate {
   @objc final public func webView(_ webView: WebKit.WKWebView, decidePolicyFor navigationAction: WebKit.WKNavigationAction, decisionHandler: @escaping (WebKit.WKNavigationActionPolicy) -> Swift.Void)
   @objc final public func webView(_ webView: WebKit.WKWebView, didFinish navigation: WebKit.WKNavigation)
 }
-@objc public class PaymentOptionDetailRequest : PGW.BaseRequest {
+@_inheritsConvenienceInitializers @objc public class PaymentOptionDetailRequest : PGW.BaseRequest {
   @objc public var paymentToken: Swift.String!
   @objc public var paymentChannel: Swift.String
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class AgentChannel : PGW.BaseModel {
+@_inheritsConvenienceInitializers @objc public class AgentChannel : PGW.BaseModel {
   @objc public var code: Swift.String! {
     get
-    }
+  }
   @objc public var name: Swift.String! {
     get
-    }
-  @objc override dynamic public init()
+  }
   @objc deinit
+  @objc override dynamic public init()
 }
 @objc public class AlternativePaymentBuilder : ObjectiveC.NSObject {
   @objc public init(agentCode: Swift.String, channelCode: Swift.String)
@@ -228,10 +228,10 @@ extension PGWWKWebViewDelegate : WebKit.WKNavigationDelegate {
   @objc public func email(_ email: Swift.String) -> PGW.AlternativePaymentBuilder
   @objc public func mobileNumber(_ number: Swift.String) -> PGW.AlternativePaymentBuilder
   @objc public func build() -> PGW.AlternativePayment
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class CreditCardPayment : ObjectiveC.NSObject {
+@_hasMissingDesignatedInitializers @objc public class CreditCardPayment : ObjectiveC.NSObject {
   @objc override dynamic public init()
   @objc deinit
 }
@@ -244,9 +244,9 @@ extension Data {
     get
   }
 }
-@objc public class Constants : ObjectiveC.NSObject {
-  @objc override dynamic public init()
+@_inheritsConvenienceInitializers @objc public class Constants : ObjectiveC.NSObject {
   @objc deinit
+  @objc override dynamic public init()
 }
 extension Constants {
   @objc public static let JSON_NAME_ID: Swift.String
@@ -318,13 +318,13 @@ extension Constants {
   @objc public static let JSON_NAME_SIGNATURE: Swift.String
   @objc public static let JSON_NAME_RETURN_URL: Swift.String
 }
-@objc public class AlternativeOptionDetail : PGW.BaseModel {
+@_inheritsConvenienceInitializers @objc public class AlternativeOptionDetail : PGW.BaseModel {
   @objc public var agentOptions: [PGW.AgentOption]! {
     get
-    }
+  }
   @objc public func agents(agentType: Swift.String) -> [PGW.Agent]
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
 extension AES : PGW.Cryptors {
   final public func makeEncryptor() throws -> PGW.Updatable
@@ -345,50 +345,50 @@ public protocol BlockModeWorkerFinalizing : PGW.BlockModeWorker {
 extension Array {
   public init(reserveCapacity: Swift.Int)
 }
-@objc public class AgentTypeCode : ObjectiveC.NSObject {
+@_inheritsConvenienceInitializers @objc public class AgentTypeCode : ObjectiveC.NSObject {
   @objc public static let BANK: Swift.String
   @objc public static let KIOSK: Swift.String
   @objc public static let COUNTER: Swift.String
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class CardType : PGW.BaseModel {
+@_inheritsConvenienceInitializers @objc public class CardType : PGW.BaseModel {
   @objc public var code: Swift.String! {
     get
-    }
+  }
   @objc public var name: Swift.String! {
     get
-    }
+  }
   @objc public var iconUrl: Swift.String! {
     get
-    }
+  }
   @objc public var prefixes: [Swift.String]! {
     get
-    }
+  }
   @objc public var minLength: Swift.Int {
     @objc get
   }
   @objc public var maxLength: Swift.Int {
     @objc get
   }
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class PaymentOptionResponse : PGW.BaseResponse {
+@_inheritsConvenienceInitializers @objc public class PaymentOptionResponse : PGW.BaseResponse {
   @objc public var paymentToken: Swift.String! {
     get
-    }
+  }
   @objc public var merchantDetail: PGW.MerchantDetail! {
     get
-    }
+  }
   @objc public var channels: [PGW.Channel]! {
     get
-    }
+  }
   @objc public var transactionDetail: PGW.TransactionDetail! {
     get
-    }
-  @objc override dynamic public init()
+  }
   @objc deinit
+  @objc override dynamic public init()
 }
 final public class MD5 {
   public init()
@@ -398,23 +398,23 @@ final public class MD5 {
 extension MD5 : PGW.Updatable {
   final public func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8>
 }
-@objc public class InstallmentOptionDetail : PGW.BaseModel {
+@_inheritsConvenienceInitializers @objc public class InstallmentOptionDetail : PGW.BaseModel {
   @objc public var banks: [PGW.Bank]! {
     get
-    }
-  @objc override dynamic public init()
+  }
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class BaseResponse : PGW.BaseModel {
+@objc @_inheritsConvenienceInitializers public class BaseResponse : PGW.BaseModel {
   @objc public var version: Swift.String! {
     get
-    }
+  }
   @objc public var responseCode: Swift.String! {
     get
-    }
+  }
   @objc public var responseDescription: Swift.String! {
     get
-    }
+  }
   @objc override dynamic public init()
   @objc deinit
 }
@@ -445,21 +445,21 @@ final public class SHA2 {
 extension SHA2 : PGW.Updatable {
   final public func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8>
 }
-@objc public class MerchantDetail : PGW.BaseModel {
+@_inheritsConvenienceInitializers @objc public class MerchantDetail : PGW.BaseModel {
   @objc public var name: Swift.String! {
     get
-    }
+  }
   @objc public var address: Swift.String? {
     get
-    }
+  }
   @objc public var iconUrl: Swift.String? {
     get
-    }
+  }
   @objc public var email: Swift.String? {
     get
-    }
-  @objc override dynamic public init()
+  }
   @objc deinit
+  @objc override dynamic public init()
 }
 @objc public class CreditCardPaymentBuilder : PGW.BaseCardPaymentBuilder {
   @objc public init(pan: Swift.String)
@@ -473,19 +473,19 @@ extension SHA2 : PGW.Updatable {
   @objc public func mobileNumber(_ mobileNumber: Swift.String) -> PGW.CreditCardPaymentBuilder
   @objc public func storeCard(_ storeCard: Swift.Bool) -> PGW.CreditCardPaymentBuilder
   @objc public func build() -> PGW.CreditCardPayment
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class Plan : PGW.BaseModel {
+@_inheritsConvenienceInitializers @objc public class Plan : PGW.BaseModel {
   @objc public var interestType: Swift.String! {
     get
-    }
+  }
   @objc public var currencyCode: Swift.String! {
     get
-    }
+  }
   @objc public var label: Swift.String! {
     get
-    }
+  }
   @objc public var period: Swift.Int {
     @objc get
   }
@@ -498,42 +498,42 @@ extension SHA2 : PGW.Updatable {
   @objc public var monthlyInterest: Swift.Double {
     @objc get
   }
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class TransactionResultResponse : PGW.BaseResponse {
+@_inheritsConvenienceInitializers @objc public class TransactionResultResponse : PGW.BaseResponse {
   @objc public var paymentChannel: Swift.String! {
     get
-    }
+  }
   @objc public var agentCode: Swift.String? {
     get
-    }
+  }
   @objc public var channelCode: Swift.String? {
     get
-    }
+  }
   @objc public var transactionID: Swift.String? {
     get
-    }
+  }
   @objc public var redirectUrl: Swift.String? {
     get
-    }
+  }
   @objc public var slipUrl: Swift.String? {
     get
-    }
-  @objc override dynamic public init()
+  }
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class CreditCardOptionDetail : PGW.BaseModel {
+@_inheritsConvenienceInitializers @objc public class CreditCardOptionDetail : PGW.BaseModel {
   @objc public var bins: [Swift.String]! {
     get
-    }
+  }
   @objc public var cardTypes: [PGW.CardType]! {
     get
-    }
-  @objc override dynamic public init()
+  }
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class TransactionRequest : PGW.BaseRequest {
+@_inheritsConvenienceInitializers @objc public class TransactionRequest : PGW.BaseRequest {
   @objc override dynamic public init()
   @objc deinit
 }
@@ -550,7 +550,7 @@ public struct CBC : PGW.BlockMode {
   public init(iv: Swift.Array<Swift.UInt8>)
   public func worker(blockSize: Swift.Int, cipherOperation: @escaping PGW.CipherOperationOnBlock) throws -> PGW.CipherModeWorker
 }
-@objc public class BaseModel : ObjectiveC.NSObject {
+@objc @_inheritsConvenienceInitializers public class BaseModel : ObjectiveC.NSObject {
   @objc override dynamic public init()
   @objc deinit
 }
@@ -559,71 +559,71 @@ public protocol Updatable {
   mutating func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
 }
 extension Updatable {
-  mutating public func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
-  mutating public func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8>
-  mutating public func update(withBytes bytes: Swift.Array<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8>
-  mutating public func update(withBytes bytes: Swift.Array<Swift.UInt8>, isLast: Swift.Bool = false, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
-  mutating public func finish(withBytes bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
-  mutating public func finish(withBytes bytes: Swift.Array<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
-  mutating public func finish() throws -> Swift.Array<Swift.UInt8>
-  mutating public func finish(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
-  mutating public func finish(withBytes bytes: Swift.Array<Swift.UInt8>, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
-  mutating public func finish(output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
+  public mutating func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
+  public mutating func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8>
+  public mutating func update(withBytes bytes: Swift.Array<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8>
+  public mutating func update(withBytes bytes: Swift.Array<Swift.UInt8>, isLast: Swift.Bool = false, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
+  public mutating func finish(withBytes bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
+  public mutating func finish(withBytes bytes: Swift.Array<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
+  public mutating func finish() throws -> Swift.Array<Swift.UInt8>
+  public mutating func finish(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
+  public mutating func finish(withBytes bytes: Swift.Array<Swift.UInt8>, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
+  public mutating func finish(output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
 }
-@objc public class AlternativePayment : ObjectiveC.NSObject {
+@_inheritsConvenienceInitializers @objc public class AlternativePayment : ObjectiveC.NSObject {
   @objc override dynamic public init()
   @objc deinit
 }
-@objc public class TransactionDetail : PGW.BaseModel {
+@_inheritsConvenienceInitializers @objc public class TransactionDetail : PGW.BaseModel {
   @objc public var amount: Swift.String! {
     get
-    }
+  }
   @objc public var currencyCode: Swift.String! {
     get
-    }
+  }
   @objc public var invoiceNo: Swift.String! {
     get
-    }
+  }
   @objc public var productDescription: Swift.String! {
     get
-    }
-  @objc override dynamic public init()
+  }
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class Channel : PGW.BaseModel {
+@_inheritsConvenienceInitializers @objc public class Channel : PGW.BaseModel {
   @objc public var name: Swift.String! {
     get
-    }
+  }
   @objc public var iconUrl: Swift.String! {
     get
-    }
+  }
   @objc public func paymentChannel() -> Swift.String
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class PaymentChannel : ObjectiveC.NSObject {
+@_inheritsConvenienceInitializers @objc public class PaymentChannel : ObjectiveC.NSObject {
   @objc public static let NONE: Swift.String
   @objc public static let CREDIT_CARD: Swift.String
   @objc public static let INSTALLMENT: Swift.String
   @objc public static let ALTERNATIVE_PAYMENT: Swift.String
-  @objc override dynamic public init()
   @objc deinit
+  @objc override dynamic public init()
 }
-@objc public class Agent : PGW.BaseModel {
+@_inheritsConvenienceInitializers @objc public class Agent : PGW.BaseModel {
   @objc public var code: Swift.String! {
     get
-    }
+  }
   @objc public var name: Swift.String! {
     get
-    }
+  }
   @objc public var logoUrl: Swift.String! {
     get
-    }
+  }
   @objc public var agentChannels: [PGW.AgentChannel]! {
     get
-    }
-  @objc override dynamic public init()
+  }
   @objc deinit
+  @objc override dynamic public init()
 }
 @available(*, renamed: "Digest")
 public typealias Hash = PGW.Digest
@@ -632,10 +632,10 @@ public struct Digest {
   public static func sha256(_ bytes: Swift.Array<Swift.UInt8>) -> Swift.Array<Swift.UInt8>
   public static func sha2(_ bytes: Swift.Array<Swift.UInt8>, variant: PGW.SHA2.Variant) -> Swift.Array<Swift.UInt8>
 }
-@objc public class PGWSDKBuilder : ObjectiveC.NSObject {
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class PGWSDKBuilder : ObjectiveC.NSObject {
   @objc public var apiEnvironment: PGW.APIEnvironment {
     get
-    }
+  }
   @objc public func apiEnvironment(_ apiEnvironment: PGW.APIEnvironment) -> PGW.PGWSDKBuilder
   @objc public func merchantID(_ merchantID: Swift.String) -> PGW.PGWSDKBuilder
   @objc public func enableLog(_ enableLog: Swift.Bool) -> PGW.PGWSDKBuilder
@@ -651,22 +651,22 @@ public struct Digest {
     get
   }
 }
-@objc public class AgentOption : PGW.BaseModel {
+@_inheritsConvenienceInitializers @objc public class AgentOption : PGW.BaseModel {
   @objc public var type: Swift.String! {
     get
-    }
+  }
   @objc public var agents: [PGW.Agent]! {
     get
-    }
-  @objc override dynamic public init()
+  }
   @objc deinit
+  @objc override dynamic public init()
 }
 public enum PKCS7 {
 }
 public protocol Cryptors : AnyObject {
   func makeEncryptor() throws -> PGW.Updatable
 }
-@objc public class PGWSDK : PGW.PGWSDKBuilder {
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class PGWSDK : PGW.PGWSDKBuilder {
   @objc public static let shared: PGW.PGWSDK
   @objc public class func builder() -> PGW.PGWSDKBuilder
   @objc public func paymentOption(paymentOptionRequest request: PGW.PaymentOptionRequest, success: @escaping PGW.response<PGW.PaymentOptionResponse>, failure: @escaping PGW.failure)
@@ -695,7 +695,9 @@ extension PGW.SHA2.Variant : Swift.Equatable {}
 extension PGW.SHA2.Variant : Swift.Hashable {}
 extension PGW.CBC.Error : Swift.Equatable {}
 extension PGW.CBC.Error : Swift.Hashable {}
+extension PGW.SecurePayAPIEnvironment : Swift.Equatable {}
 extension PGW.SecurePayAPIEnvironment : Swift.Hashable {}
 extension PGW.SecurePayAPIEnvironment : Swift.RawRepresentable {}
+extension PGW.APIEnvironment : Swift.Equatable {}
 extension PGW.APIEnvironment : Swift.Hashable {}
 extension PGW.APIEnvironment : Swift.RawRepresentable {}
