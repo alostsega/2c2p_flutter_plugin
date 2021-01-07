@@ -23,7 +23,6 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initCcppPlugin() async {
     await CcppFlutterPlugin.initialize(
-      merchantId: 'MERCHANT_ID',
       isSandbox: true,
     );
   }
@@ -31,7 +30,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     var paymentToken = 'PAYMENT_TOKEN';
-    var cvv = '123';
+    var securityCode = '123';
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -48,10 +47,10 @@ class _MyAppState extends State<MyApp> {
                     creditCardNumber: '4111111111111111',
                     expiryMonth: 7,
                     expiryYear: 2024,
-                    cvv: cvv,
+                    securityCode: securityCode,
                     storeCard: true,
                   );
-                  print('transactionId: ${response.transactionId}');
+                  print('invoiceNo: ${response.invoiceNo}');
                   print('error: ${response.errorMessage}');
                 },
               ),
@@ -61,9 +60,9 @@ class _MyAppState extends State<MyApp> {
                   var response = await CcppFlutterPlugin.paymentWithToken(
                     paymentToken: paymentToken,
                     cardToken: 'CARD_TOKEN',
-                    cvv: cvv,
+                    securityCode: securityCode,
                   );
-                  print('transactionId: ${response.transactionId}');
+                  print('invoiceNo: ${response.invoiceNo}');
                   print('error: ${response.errorMessage}');
                 },
               ),
