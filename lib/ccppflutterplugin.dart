@@ -7,7 +7,6 @@ class CcppFlutterPlugin {
   static const MethodChannel _channel = const MethodChannel('co.ichob/ccpp');
 
   static Future<void> initialize({
-    String merchantId,
     bool isSandbox,
   }) async {
     await _channel.invokeMethod('initialize', {
