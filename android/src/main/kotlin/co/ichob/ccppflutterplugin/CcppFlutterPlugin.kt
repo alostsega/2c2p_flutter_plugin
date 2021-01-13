@@ -67,7 +67,6 @@ class CcppFlutterPlugin : MethodCallHandler, FlutterPlugin, ActivityAware, Activ
             "initialize" -> {
                 val isSandbox = call.argument<Boolean>("isSandBox") ?: true
                 val environment = if(isSandbox) APIEnvironment.Sandbox else APIEnvironment.Production
-
                 val params = PGWSDKParamsBuilder(activity!!, environment).build()
                 PGWSDK.initialize(params)
                 result.success(null)

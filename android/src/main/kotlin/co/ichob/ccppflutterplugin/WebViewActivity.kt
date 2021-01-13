@@ -32,15 +32,15 @@ class WebViewActivity : AppCompatActivity() {
     }
 
     private fun initFragment() {
-        val redirect = intent.getStringExtra("redirect")
+        val redirect = intent.getStringExtra("redirect") ?: ""
         val fragment: WebViewFragment = WebViewFragment.newInstance(redirect)
         supportFragmentManager.beginTransaction()
                 .add(R.id.content, fragment, "")
                 .commit()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
         }
         return super.onOptionsItemSelected(item)

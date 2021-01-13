@@ -15,7 +15,7 @@ import com.ccpp.pgw.sdk.android.enums.APIResponseCode
 import com.ccpp.pgw.sdk.android.model.api.TransactionResultResponse
 
 class WebViewFragment : Fragment() {
-    private var mRedirectUrl: String? = null
+    private var mRedirectUrl: String = "https://www.chomchob.com"
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +25,7 @@ class WebViewFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val webView = WebView(activity)
+        val webView = WebView(requireContext())
         webView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
         webView.settings.javaScriptEnabled = true
