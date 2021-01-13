@@ -8,14 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
-import com.ccpp.pgw.sdk.android.callback.TransactionResultCallback
+import com.ccpp.pgw.sdk.android.callback.APIResponseCallback
 import com.ccpp.pgw.sdk.android.core.authenticate.PGWJavaScriptInterface
 import com.ccpp.pgw.sdk.android.core.authenticate.PGWWebViewClient
 import com.ccpp.pgw.sdk.android.enums.APIResponseCode
-import com.ccpp.pgw.sdk.android.model.api.response.TransactionResultResponse
+import com.ccpp.pgw.sdk.android.model.api.TransactionResultResponse
 
 class WebViewFragment : Fragment() {
-    private var mRedirectUrl: String? = null
+    private var mRedirectUrl: String = "https://www.chomchob.com"
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,25 +25,25 @@ class WebViewFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val webView = WebView(activity)
+        val webView = WebView(requireContext())
         webView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
         webView.settings.javaScriptEnabled = true
         webView.settings.domStorageEnabled = true
         webView.webViewClient = PGWWebViewClient()
-        webView.addJavascriptInterface(PGWJavaScriptInterface(mTransactionResultCallback),
+        webView.addJavascriptInterface(PGWJavaScriptInterface(mAPIResponseCallback),
                 PGWJavaScriptInterface.JAVASCRIPT_TRANSACTION_RESULT_KEY)
 
         webView.loadUrl(mRedirectUrl)
         return webView
     }
 
-    private val mTransactionResultCallback: TransactionResultCallback = object : TransactionResultCallback {
+    private val mAPIResponseCallback: APIResponseCallback<TransactionResultResponse> = object : APIResponseCallback<TransactionResultResponse> {
         override fun onResponse(response: TransactionResultResponse) {
-            if (response.responseCode == APIResponseCode.TRANSACTION_COMPLETED) {
-                val transactionID = response.transactionID
+            if (response.responseCode == APIResponseCode.TransactionCompleted) {
+                val invoiceNo = response.invoiceNo
                 val result = Intent()
-                result.putExtra("transactionId", transactionID)
+                result.putExtra("invoiceNo", invoiceNo)
                 activity?.setResult(Activity.RESULT_OK, result)
                 activity?.finish()
             } else {

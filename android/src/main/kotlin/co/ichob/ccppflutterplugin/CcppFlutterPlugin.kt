@@ -3,15 +3,17 @@ package co.ichob.ccppflutterplugin
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import com.ccpp.pgw.sdk.android.builder.CardPaymentBuilder
 import com.ccpp.pgw.sdk.android.builder.CardTokenPaymentBuilder
-import com.ccpp.pgw.sdk.android.builder.CreditCardPaymentBuilder
-import com.ccpp.pgw.sdk.android.builder.TransactionRequestBuilder
-import com.ccpp.pgw.sdk.android.callback.TransactionResultCallback
+import com.ccpp.pgw.sdk.android.builder.PGWSDKParamsBuilder
+import com.ccpp.pgw.sdk.android.builder.TransactionResultRequestBuilder
+import com.ccpp.pgw.sdk.android.callback.APIResponseCallback
 import com.ccpp.pgw.sdk.android.core.PGWSDK
 import com.ccpp.pgw.sdk.android.enums.APIEnvironment
 import com.ccpp.pgw.sdk.android.enums.APIResponseCode
-import com.ccpp.pgw.sdk.android.model.api.request.TransactionRequest
-import com.ccpp.pgw.sdk.android.model.api.response.TransactionResultResponse
+import com.ccpp.pgw.sdk.android.model.PaymentCode
+import com.ccpp.pgw.sdk.android.model.api.TransactionResultRequest
+import com.ccpp.pgw.sdk.android.model.api.TransactionResultResponse
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -63,14 +65,10 @@ class CcppFlutterPlugin : MethodCallHandler, FlutterPlugin, ActivityAware, Activ
         this.result = result
         when (call.method) {
             "initialize" -> {
-                val merchantId = call.argument<String>("merchantId")
                 val isSandbox = call.argument<Boolean>("isSandBox") ?: true
-                val environment = if(isSandbox) APIEnvironment.SANDBOX else APIEnvironment.PRODUCTION
-
-                PGWSDK.builder(activity!!)
-                        .setMerchantID(merchantId)
-                        .setAPIEnvironment(environment)
-                        .init()
+                val environment = if(isSandbox) APIEnvironment.Sandbox else APIEnvironment.Production
+                val params = PGWSDKParamsBuilder(activity!!, environment).build()
+                PGWSDK.initialize(params)
                 result.success(null)
             }
             "paymentWithCreditCard" -> {
@@ -78,15 +76,15 @@ class CcppFlutterPlugin : MethodCallHandler, FlutterPlugin, ActivityAware, Activ
                 val ccNumber = call.argument<String>("ccNumber") ?: ""
                 val expMonth = call.argument<Int>("expMonth") ?: 0
                 val expYear = call.argument<Int>("expYear") ?: 0
-                val cvv = call.argument<String>("cvv") ?: ""
+                val securityCode = call.argument<String>("securityCode") ?: ""
                 val storeCard = call.argument<Boolean>("storeCard") ?: false
-                paymentWithCreditCard(result, paymentToken, ccNumber, expMonth, expYear, cvv, storeCard)
+                paymentWithCreditCard(result, paymentToken, ccNumber, expMonth, expYear, securityCode, storeCard)
             }
             "paymentWithToken" -> {
                 val paymentToken = call.argument<String>("paymentToken") ?: ""
                 val cardToken = call.argument<String>("cardToken") ?: ""
-                val cvv = call.argument<String>("cvv") ?: ""
-                paymentWithToken(result, paymentToken,cardToken, cvv)
+                val securityCode = call.argument<String>("securityCode") ?: ""
+                paymentWithToken(result, paymentToken,cardToken, securityCode)
             }
             else -> {
                 result.notImplemented()
@@ -94,18 +92,20 @@ class CcppFlutterPlugin : MethodCallHandler, FlutterPlugin, ActivityAware, Activ
         }
     }
 
-    private fun paymentWithCreditCard(result: MethodChannel.Result, paymentToken: String, ccNumber: String, expMonth: Int, expYear: Int, cvv: String, storeCard: Boolean) {
+    private fun paymentWithCreditCard(result: MethodChannel.Result, paymentToken: String, ccNumber: String, expMonth: Int, expYear: Int, securityCode: String, storeCard: Boolean) {
+        val paymentCode = PaymentCode("CC")
+
         //Construct credit card request
-        val creditCardPayment = CreditCardPaymentBuilder(ccNumber)
+        val paymentRequest = CardPaymentBuilder(paymentCode, ccNumber)
                 .setExpiryMonth(expMonth)
                 .setExpiryYear(expYear)
-                .setSecurityCode(cvv)
-                .setStoreCard(storeCard)
+                .setSecurityCode(securityCode)
+                .setTokenize(storeCard)
                 .build()
 
         //Construct transaction request
-        val transactionRequest = TransactionRequestBuilder(paymentToken)
-                .withCreditCardPayment(creditCardPayment)
+        val transactionRequest = TransactionResultRequestBuilder(paymentToken)
+                .with(paymentRequest)
                 .build()
 
         //Execute payment request
@@ -113,35 +113,36 @@ class CcppFlutterPlugin : MethodCallHandler, FlutterPlugin, ActivityAware, Activ
     }
 
     private fun paymentWithToken(result: MethodChannel.Result, paymentToken: String, cardToken: String, securityCode: String) {
-        val creditCardPayment = CardTokenPaymentBuilder(cardToken)
+        val paymentCode = PaymentCode("CC")
+
+        //Construct credit card request
+        val paymentRequest = CardTokenPaymentBuilder(paymentCode, cardToken)
                 .setSecurityCode(securityCode)
                 .build()
 
-        val transactionRequest = TransactionRequestBuilder(paymentToken)
-                .withCreditCardPayment(creditCardPayment)
+        //Construct transaction request
+        val transactionRequest = TransactionResultRequestBuilder(paymentToken)
+                .with(paymentRequest)
                 .build()
 
         proceedTransaction(result, transactionRequest)
     }
 
-    private fun proceedTransaction(result: MethodChannel.Result, transactionRequest: TransactionRequest) {
-        PGWSDK.getInstance().proceedTransaction(transactionRequest, object : TransactionResultCallback {
+    private fun proceedTransaction(result: MethodChannel.Result, transactionResultRequest: TransactionResultRequest) {
+        PGWSDK.getInstance().proceedTransaction(transactionResultRequest, object: APIResponseCallback<TransactionResultResponse> {
             override fun onResponse(transactionResultResponse: TransactionResultResponse) {
+                when(transactionResultResponse.responseCode) {
+                    APIResponseCode.TransactionAuthenticateRedirect, APIResponseCode.TransactionAuthenticateFullRedirect -> {
+                        val redirectUrl = transactionResultResponse.data
 
-                //For 3DS
-                when (transactionResultResponse.responseCode) {
-                    APIResponseCode.TRANSACTION_AUTHENTICATE -> {
-                        val redirectUrl = transactionResultResponse.redirectUrl
+                        //Open WebView for 3DS
                         val i = Intent(activity, WebViewActivity::class.java)
                         i.putExtra("redirect", redirectUrl)
-                        activity?.startActivityForResult(i, CCPP_AUTH_REQUEST_CODE) //Open WebView for 3DS
+                        activity?.startActivityForResult(i, CCPP_AUTH_REQUEST_CODE)
                     }
-                    APIResponseCode.TRANSACTION_COMPLETED -> {
-
-                        //Inquiry payment result by using transaction id.
-                        val transactionID = transactionResultResponse.transactionID
-                        
-                        val response = mapOf<String, Any>("transactionId" to transactionID)
+                    APIResponseCode.TransactionCompleted -> {
+                        val invoiceNo = transactionResultResponse.invoiceNo
+                        val response = mapOf<String, Any>("invoiceNo" to invoiceNo)
                         result.success(response)
                     }
                     else -> {
@@ -163,11 +164,11 @@ class CcppFlutterPlugin : MethodCallHandler, FlutterPlugin, ActivityAware, Activ
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?): Boolean {
         if (requestCode == CCPP_AUTH_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                val transactionId = intent?.getStringExtra("transactionId")
+                val invoiceNo = intent?.getStringExtra("invoiceNo")
                 val errorMessage = intent?.getStringExtra("errorMessage")
 
                 val response = mapOf<String, Any?>(
-                        "transactionId" to transactionId,
+                        "invoiceNo" to invoiceNo,
                         "errorMessage" to errorMessage
                 )
                 result?.success(response)

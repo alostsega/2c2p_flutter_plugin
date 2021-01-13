@@ -24,13 +24,12 @@ public class SwiftCcppFlutterPlugin: NSObject, FlutterPlugin, Transaction3DSDele
         switch(call.method){
             case "initialize":
                 let args = call.arguments as! Dictionary<String, Any>
-                let merchantId = args["merchantId"] as! String
                 let isSandbox = args["isSandBox"] as! Bool
-                let apiEnv = isSandbox ? APIEnvironment.SANDBOX : APIEnvironment.PRODUCTION
-                PGWSDK.builder()
-                    .merchantID(merchantId)
-                    .apiEnvironment(apiEnv)
-                    .initialize();
+                let apiEnv = isSandbox ? APIEnvironment.Sandbox : APIEnvironment.Production
+                
+                let params: PGWSDKParams = PGWSDKParamsBuilder(apiEnvironment: apiEnv).build()
+                
+                PGWSDK.initialize(params: params)
                 result(nil)
             case "paymentWithCreditCard":
                 let args = call.arguments as! Dictionary<String, Any>
@@ -38,64 +37,73 @@ public class SwiftCcppFlutterPlugin: NSObject, FlutterPlugin, Transaction3DSDele
                 let ccNumber = args["ccNumber"] as! String
                 let expMonth = args["expMonth"] as! Int
                 let expYear = args["expYear"] as! Int
-                let cvv = args["cvv"] as! String
+                let securityCode = args["securityCode"] as! String
                 let storeCard = args["storeCard"] as! Bool
                 paymentWithCreditCard(paymentToken,
                                       ccNumber: ccNumber,
                                       expMonth: expMonth,
                                       expYear: expYear,
-                                      cvv: cvv,
+                                      securityCode: securityCode,
                                       storeCard: storeCard)
             case "paymentWithToken":
                 let args = call.arguments as! Dictionary<String, Any>
                 let paymentToken = args["paymentToken"] as! String
                 let cardToken = args["cardToken"] as! String
-                let cvv = args["cvv"] as! String
+                let securityCode = args["securityCode"] as! String
                 paymentWithToken(paymentToken,
                                  cardToken: cardToken,
-                                 cvv: cvv)
+                                 securityCode: securityCode)
             default:
                 result(FlutterMethodNotImplemented)
         }
     }
         
-    fileprivate func paymentWithCreditCard(_ paymentToken: String, ccNumber: String, expMonth: Int, expYear: Int, cvv: String, storeCard: Bool) {
+    fileprivate func paymentWithCreditCard(_ paymentToken: String, ccNumber: String, expMonth: Int, expYear: Int, securityCode: String, storeCard: Bool) {
         //Construct credit card request
-        let creditCardPayment = CreditCardPaymentBuilder(pan: ccNumber)
-            .expiryMonth(expMonth)
-            .expiryYear(expYear)
-            .securityCode(cvv)
-            .storeCard(storeCard)
-            .build()
+        let paymentCode: PaymentCode = PaymentCode(channelCode: "CC")
+          
+        let paymentRequest: PaymentRequest = CardPaymentBuilder(paymentCode: paymentCode, ccNumber)
+                                             .expiryMonth(expMonth)
+                                             .expiryYear(expYear)
+                                             .securityCode(securityCode)
+                                             .tokenize(storeCard)
+                                             .build()
     
         //Construct transaction request
-        let transactionRequest:TransactionRequest = TransactionRequestBuilder(paymentToken: paymentToken)
-            .withCreditCardPayment(creditCardPayment)
-            .build()
+        let transactionResultRequest: TransactionResultRequest = TransactionResultRequestBuilder(paymentToken: paymentToken)
+                                                                 .with(paymentRequest)
+                                                                 .build()
     
         //Execute payment request
-        proceedTransaction(transactionRequest: transactionRequest)
+        proceedTransaction(transactionResultRequest: transactionResultRequest)
     }
     
-    fileprivate func paymentWithToken(_ paymentToken: String, cardToken: String, cvv: String) {
-        let tokenPayment = CardTokenPaymentBuilder(cardToken: cardToken)
-            .securityCode(cvv)
-            .build()
-        let transactionRequest:TransactionRequest = TransactionRequestBuilder(paymentToken: paymentToken)
-            .withCreditCardPayment(tokenPayment)
-            .build()
+    fileprivate func paymentWithToken(_ paymentToken: String, cardToken: String, securityCode: String) {
+        let paymentCode: PaymentCode = PaymentCode(channelCode: "CC")
+           
+        let paymentRequest: PaymentRequest = CardTokenPaymentBuilder(paymentCode: paymentCode, cardToken)
+                                             .securityCode(securityCode)
+                                             .build()
+        
+        //Construct transaction request
+        let transactionResultRequest: TransactionResultRequest = TransactionResultRequestBuilder(paymentToken: paymentToken)
+                                                                 .with(paymentRequest)
+                                                                 .build()
         
         //Execute payment request
-        proceedTransaction(transactionRequest: transactionRequest)
+        proceedTransaction(transactionResultRequest: transactionResultRequest)
     }
     
-    fileprivate func proceedTransaction(transactionRequest: TransactionRequest) {
+    fileprivate func proceedTransaction(transactionResultRequest: TransactionResultRequest) {
         
-        PGWSDK.shared.proceedTransaction(transactionRequest: transactionRequest,
-                                       success: { (response:TransactionResultResponse) in
+        PGWSDK.shared.proceedTransaction(transactionResultRequest: transactionResultRequest,
+                                         { (response: TransactionResultResponse) in
         //For 3DS
-        if response.responseCode == APIResponseCode.TRANSACTION_AUTHENTICATE {
-            let redirectUrl:String = response.redirectUrl!
+        if response.responseCode == APIResponseCode.TransactionAuthenticateRedirect
+            || response.responseCode == APIResponseCode.TransactionAuthenticateFullRedirect {
+            
+            guard  let redirectUrl: String = response.data else { return }
+            
             let webView = WKWebViewController()
             webView.redirectUrl = redirectUrl
             webView.transaction3dsDelegate = self
@@ -104,10 +112,10 @@ public class SwiftCcppFlutterPlugin: NSObject, FlutterPlugin, Transaction3DSDele
             nav.modalPresentationStyle = .fullScreen
             self.viewController?.present(nav, animated: true, completion: nil)
           
-        } else if response.responseCode == APIResponseCode.TRANSACTION_COMPLETED {
+        } else if response.responseCode == APIResponseCode.TransactionCompleted {
             //Inquiry payment result by using transaction id.
-            let transactionId = response.transactionID!
-            let response = ["transactionId": transactionId]
+            let invoiceNo = response.invoiceNo
+            let response = ["invoiceNo": invoiceNo]
             self.result!(response)
         } else {
             //Get error response and display error
@@ -122,9 +130,9 @@ public class SwiftCcppFlutterPlugin: NSObject, FlutterPlugin, Transaction3DSDele
         }
     }
     
-    func onTransactionResult(_ transactionId: String?, _ errorMessage: String?) {
-        if(transactionId != nil) {
-            let response = ["transactionId": transactionId]
+    func onTransactionResult(_ invoiceNo: String?, _ errorMessage: String?) {
+        if(invoiceNo != nil) {
+            let response = ["invoiceNo": invoiceNo]
             self.result!(response)
         }
         else{
@@ -137,7 +145,7 @@ public class SwiftCcppFlutterPlugin: NSObject, FlutterPlugin, Transaction3DSDele
 //For WKWebView implementation
 class WKWebViewController: UIViewController {
     var webView:WKWebView!
-    var pgwWebViewDelegate:PGWWKWebViewDelegate!
+    var pgwWebViewDelegate:PGWWebViewNavigationDelegate!
     var redirectUrl:String?
     var transaction3dsDelegate: Transaction3DSDelegate!
   
@@ -169,27 +177,27 @@ class WKWebViewController: UIViewController {
         self.view.addSubview(self.webView)
     }
 
-    func transactionResultCallback() -> PGWWKWebViewDelegate {
-        self.pgwWebViewDelegate = PGWWKWebViewDelegate(success: { (response: TransactionResultResponse) in
-            if response.responseCode == APIResponseCode.TRANSACTION_COMPLETED {
-                //Inquiry payment result by using transaction id.
-                let transactionID:String = response.transactionID!
-                self.transaction3dsDelegate.onTransactionResult(transactionID, nil)
+    func transactionResultCallback() -> PGWWebViewNavigationDelegate {
+        self.pgwWebViewDelegate = PGWWebViewNavigationDelegate({ (response: TransactionResultResponse) in
+            if response.responseCode == APIResponseCode.TransactionCompleted {
+                //Inquiry payment result by using invoice no.
+                let invoiceNo:String = response.invoiceNo
+                self.transaction3dsDelegate.onTransactionResult(invoiceNo, nil)
                 self.dismiss(animated: true, completion: nil)
             } else {
                 //Get error response and display error
                 self.transaction3dsDelegate.onTransactionResult(nil, response.responseDescription!)
                 self.dismiss(animated: true, completion: nil)
             }
-        }, failure: { (error: NSError) in
-            //Get error response and display error
+        }, { (error: NSError) in
             self.transaction3dsDelegate.onTransactionResult(nil, error.description)
             self.dismiss(animated: true, completion: nil)
         })
+        
         return self.pgwWebViewDelegate
     }
 }
 
 protocol Transaction3DSDelegate{
-  func onTransactionResult(_ transactionId: String?, _ errorMessage: String?)
+  func onTransactionResult(_ invoiceNo: String?, _ errorMessage: String?)
 }

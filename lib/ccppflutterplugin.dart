@@ -7,11 +7,9 @@ class CcppFlutterPlugin {
   static const MethodChannel _channel = const MethodChannel('co.ichob/ccpp');
 
   static Future<void> initialize({
-    String merchantId,
     bool isSandbox,
   }) async {
     await _channel.invokeMethod('initialize', {
-      'merchantId': merchantId,
       'isSandBox': isSandbox,
     });
   }
@@ -21,7 +19,7 @@ class CcppFlutterPlugin {
     String creditCardNumber,
     int expiryMonth,
     int expiryYear,
-    String cvv,
+    String securityCode,
     bool storeCard,
   }) async {
     var args = {
@@ -29,7 +27,7 @@ class CcppFlutterPlugin {
       'ccNumber': creditCardNumber,
       'expMonth': expiryMonth,
       'expYear': expiryYear,
-      'cvv': cvv,
+      'securityCode': securityCode,
       'storeCard': storeCard,
     };
     var response = await _channel.invokeMethod('paymentWithCreditCard', args);
@@ -39,12 +37,12 @@ class CcppFlutterPlugin {
   static Future<CcppResult> paymentWithToken({
     String paymentToken,
     String cardToken,
-    String cvv,
+    String securityCode,
   }) async {
     var args = {
       'paymentToken': paymentToken,
       'cardToken': cardToken,
-      'cvv': cvv
+      'securityCode': securityCode
     };
     var response = await _channel.invokeMethod('paymentWithToken', args);
     return CcppResult.fromJson(Map<String, dynamic>.from(response));
