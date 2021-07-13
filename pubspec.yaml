@@ -1,11 +1,11 @@
 name: ccppflutterplugin
 description: 2C2P Payment Gateway Flutter plugin.
-version: 0.1.1
+version: 0.1.2
 author: alostsega
 homepage:
 
 environment:
-  sdk: ">=2.6.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.10.0"
 
 dependencies:
