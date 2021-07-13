@@ -7,7 +7,7 @@ class CcppFlutterPlugin {
   static const MethodChannel _channel = const MethodChannel('co.ichob/ccpp');
 
   static Future<void> initialize({
-    bool isSandbox,
+    required bool isSandbox,
   }) async {
     await _channel.invokeMethod('initialize', {
       'isSandBox': isSandbox,
@@ -15,12 +15,12 @@ class CcppFlutterPlugin {
   }
 
   static Future<CcppResult> paymentWithCreditCard({
-    String paymentToken,
-    String creditCardNumber,
-    int expiryMonth,
-    int expiryYear,
-    String securityCode,
-    bool storeCard,
+    required String paymentToken,
+    required String creditCardNumber,
+    required int expiryMonth,
+    required int expiryYear,
+    required String securityCode,
+    required bool storeCard,
   }) async {
     var args = {
       'paymentToken': paymentToken,
@@ -35,9 +35,9 @@ class CcppFlutterPlugin {
   }
 
   static Future<CcppResult> paymentWithToken({
-    String paymentToken,
-    String cardToken,
-    String securityCode,
+    required String paymentToken,
+    required String cardToken,
+    required String securityCode,
   }) async {
     var args = {
       'paymentToken': paymentToken,

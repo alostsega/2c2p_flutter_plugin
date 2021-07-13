@@ -5,8 +5,8 @@ class CcppResult {
   String errorMessage;
 
   CcppResult({
-    this.invoiceNo,
-    this.errorMessage,
+    required this.invoiceNo,
+    required this.errorMessage,
   });
 
   factory CcppResult.fromJson(Map<String, dynamic> json) {
