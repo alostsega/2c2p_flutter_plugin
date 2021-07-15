@@ -1,12 +1,12 @@
 import 'dart:collection';
 
 class CcppResult {
-  String invoiceNo;
-  String errorMessage;
+  String? invoiceNo;
+  String? errorMessage;
 
   CcppResult({
-    required this.invoiceNo,
-    required this.errorMessage,
+    this.invoiceNo,
+    this.errorMessage,
   });
 
   factory CcppResult.fromJson(Map<String, dynamic> json) {
