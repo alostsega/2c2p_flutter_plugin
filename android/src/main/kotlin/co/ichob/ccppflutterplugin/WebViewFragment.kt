@@ -9,10 +9,11 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.ccpp.pgw.sdk.android.callback.APIResponseCallback
-import com.ccpp.pgw.sdk.android.core.authenticate.PGWJavaScriptInterface
+import com.ccpp.pgw.sdk.android.core.PGWSDK
 import com.ccpp.pgw.sdk.android.core.authenticate.PGWWebViewClient
 import com.ccpp.pgw.sdk.android.enums.APIResponseCode
-import com.ccpp.pgw.sdk.android.model.api.TransactionResultResponse
+import com.ccpp.pgw.sdk.android.model.api.TransactionStatusRequest
+import com.ccpp.pgw.sdk.android.model.api.TransactionStatusResponse
 
 class WebViewFragment : Fragment() {
     private var mRedirectUrl: String = "https://www.chomchob.com"
@@ -28,40 +29,63 @@ class WebViewFragment : Fragment() {
         val webView = WebView(requireContext())
         webView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
-        webView.settings.javaScriptEnabled = true
-        webView.settings.domStorageEnabled = true
-        webView.webViewClient = PGWWebViewClient()
-        webView.addJavascriptInterface(PGWJavaScriptInterface(mAPIResponseCallback),
-                PGWJavaScriptInterface.JAVASCRIPT_TRANSACTION_RESULT_KEY)
 
+        with(webView) {
+            //Optional
+            settings.builtInZoomControls = true;
+            settings.setSupportZoom(true)
+            settings.loadWithOverviewMode = true;
+            settings.useWideViewPort = true;
+            settings.cacheMode = android.webkit.WebSettings.LOAD_NO_CACHE;
+
+            //Require
+            settings.javaScriptEnabled = true
+            settings.domStorageEnabled = true
+        };
+
+        webView.webViewClient = PGWWebViewClient({ paymentToken ->
+            paymentToken?.let {
+                inquiryTransactionStatus(it)
+            }
+        }, null)
         webView.loadUrl(mRedirectUrl)
         return webView
     }
 
-    private val mAPIResponseCallback: APIResponseCallback<TransactionResultResponse> = object : APIResponseCallback<TransactionResultResponse> {
-        override fun onResponse(response: TransactionResultResponse) {
-            if (response.responseCode == APIResponseCode.TransactionCompleted) {
-                val invoiceNo = response.invoiceNo
-                val result = Intent()
-                result.putExtra("invoiceNo", invoiceNo)
-                activity?.setResult(Activity.RESULT_OK, result)
-                activity?.finish()
-            } else {
-                //Get error response and display error
-                val result = Intent()
-                result.putExtra("errorMessage", response.responseDescription)
-                activity?.setResult(Activity.RESULT_OK, result)
-                activity?.finish()
-            }
-        }
+    private fun inquiryTransactionStatus(paymentToken: String) {
+        val transactionStatusRequest = TransactionStatusRequest(paymentToken)
+        transactionStatusRequest.setAdditionalInfo(true)
+        PGWSDK.getInstance().transactionStatus(
+                transactionStatusRequest,
+                object : APIResponseCallback<TransactionStatusResponse> {
+                    override fun onResponse(response: TransactionStatusResponse) {
+                        when(response.responseCode) {
+                            APIResponseCode.TransactionNotFound, APIResponseCode.TransactionCompleted -> {
+                                //Read transaction status inquiry response.
+                                val data = Intent()
+                                data.putExtra("invoiceNo", response.invoiceNo)
+                                activity?.setResult(Activity.RESULT_OK, data)
+                                activity?.finish()
+                            }
+                            else -> {
+                                //Get error response and display error.
+                                val data = Intent()
+                                data.putExtra("errorMessage", response.responseDescription)
+                                activity?.setResult(Activity.RESULT_OK, data)
+                                activity?.finish()
+                            }
+                        }
+                    }
 
-        override fun onFailure(error: Throwable) {
-            //Get error response and display error
-            val result = Intent()
-            result.putExtra("errorMessage", error.message)
-            activity?.setResult(Activity.RESULT_OK, result)
-            activity?.finish()
-        }
+                    override fun onFailure(error: Throwable) {
+                        //Get error response and display error.
+                        val data = Intent()
+                        data.putExtra("errorMessage", error.message)
+                        activity?.setResult(Activity.RESULT_OK, data)
+                        activity?.finish()
+                    }
+                }
+        )
     }
 
     companion object {
