@@ -145,8 +145,8 @@ public class SwiftCcppFlutterPlugin: NSObject, FlutterPlugin, Transaction3DSDele
 //For WKWebView implementation
 class WKWebViewController: UIViewController {
     var webView:WKWebView!
-    var pgwWebViewDelegate:PGWWebViewNavigationDelegate!
-    var redirectUrl:String?
+    var pgwWebViewDelegate: PGWWebViewNavigationDelegate!
+    var redirectUrl: String?
     var transaction3dsDelegate: Transaction3DSDelegate!
   
     override func viewDidAppear(_ animated: Bool) {
@@ -178,7 +178,20 @@ class WKWebViewController: UIViewController {
     }
 
     func transactionResultCallback() -> PGWWebViewNavigationDelegate {
-        self.pgwWebViewDelegate = PGWWebViewNavigationDelegate({ (response: TransactionResultResponse) in
+        self.pgwWebViewDelegate = PGWWebViewNavigationDelegate { [weak self] paymentToken in
+            guard let self = self else {return}
+            self.requestPGWStatus(paymentToken: paymentToken)
+        }
+        
+        return self.pgwWebViewDelegate
+    }
+
+    private func requestPGWStatus(paymentToken: String) {
+        let transactionStatusRequest = TransactionStatusRequest(paymentToken: paymentToken)
+        transactionStatusRequest.additionalInfo = true
+
+        PGWSDK.shared.transactionStatus(transactionStatusRequest: transactionStatusRequest) { [weak self] response in
+            guard let self = self else {return}
             if response.responseCode == APIResponseCode.TransactionCompleted {
                 //Inquiry payment result by using invoice no.
                 let invoiceNo:String = response.invoiceNo
@@ -189,12 +202,11 @@ class WKWebViewController: UIViewController {
                 self.transaction3dsDelegate.onTransactionResult(nil, response.responseDescription!)
                 self.dismiss(animated: true, completion: nil)
             }
-        }, { (error: NSError) in
+        } _: { [weak self] error in
+            guard let self = self else {return}
             self.transaction3dsDelegate.onTransactionResult(nil, error.description)
             self.dismiss(animated: true, completion: nil)
-        })
-        
-        return self.pgwWebViewDelegate
+        }
     }
 }
 
