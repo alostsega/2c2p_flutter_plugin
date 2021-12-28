@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.4 (swiftlang-1205.0.26.9 clang-1205.0.19.55)
+// swift-compiler-version: Apple Swift version 5.5.1 (swiftlang-1300.0.31.4 clang-1300.0.29.6)
 // swift-module-flags: -target x86_64-apple-ios11.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name PGW
 import Darwin
 import Foundation
@@ -7,6 +7,7 @@ import Swift
 import SystemConfiguration
 import UIKit
 import WebKit
+import _Concurrency
 public struct BlockModeOption : Swift.OptionSet {
   public let rawValue: Swift.Int
   public init(rawValue: Swift.Int)
@@ -22,7 +23,7 @@ public struct BlockModeOption : Swift.OptionSet {
   public typealias Element = PGW.BlockModeOption
   public typealias RawValue = Swift.Int
 }
-extension String {
+extension Swift.String {
   public func decryptBase64ToString(cipher: PGW.Cipher) throws -> Swift.String
   public func decryptBase64(cipher: PGW.Cipher) throws -> Swift.Array<Swift.UInt8>
 }
@@ -58,7 +59,6 @@ public struct CFB : PGW.BlockMode {
   @objc public init(apiEnvironment: PGW.SecurePayAPIEnvironment, enableLog: Swift.Bool)
   @objc public func securePayToken(cardNo: Swift.String?, expiryMonth: Swift.Int, expiryYear: Swift.Int, securityCode: Swift.String?, pin: Swift.String?) -> Swift.String
   @objc public func maskedCardNo() -> Swift.String
-  @objc override dynamic public init()
   @objc deinit
 }
 @objc public enum SecurePayAPIEnvironment : Swift.Int {
@@ -153,7 +153,7 @@ final internal class StreamDecryptor : PGW.Cryptor, PGW.Updatable {
   @objc @usableFromInline
   deinit
 }
-extension ChaCha20 {
+extension PGW.ChaCha20 {
   convenience public init(key: Swift.String, iv: Swift.String) throws
 }
 @objc final public class PGWSDKParams : PGW.BaseModel {
@@ -170,7 +170,6 @@ extension ChaCha20 {
     @objc get
     @objc set(newValue)
   }
-  @objc override dynamic public init()
   @objc deinit
 }
 @_inheritsConvenienceInitializers @objc final public class MultipleCurrencyPricing : PGW.BaseExchangeRate {
@@ -178,6 +177,38 @@ extension ChaCha20 {
   @objc deinit
 }
 @objc @_inheritsConvenienceInitializers final public class PaymentData : PGW.BaseModel {
+  @objc final public var name: Swift.String?
+  @objc final public var email: Swift.String?
+  @objc final public var mobileNo: Swift.String?
+  @objc final public var accountNo: Swift.String?
+  @objc final public var cardNo: Swift.String?
+  @objc final public var expiryMonth: Swift.Int
+  @objc final public var expiryYear: Swift.Int
+  @objc final public var securityCode: Swift.String?
+  @objc final public var pin: Swift.String?
+  @objc final public var bank: Swift.String?
+  @objc final public var country: Swift.String?
+  @objc final public var tokenize: Swift.Bool
+  @objc final public var installmentInterestType: Swift.String?
+  @objc final public var installmentPeriod: Swift.Int
+  @objc final public var token: Swift.String?
+  @objc final public var qrType: Swift.String?
+  @objc final public var fxRateId: Swift.String?
+  @objc final public var billingAddress1: Swift.String?
+  @objc final public var billingAddress2: Swift.String?
+  @objc final public var billingAddress3: Swift.String?
+  @objc final public var billingCity: Swift.String?
+  @objc final public var billingState: Swift.String?
+  @objc final public var billingPostalCode: Swift.String?
+  @objc final public var billingCountryCode: Swift.String?
+  @objc final public var shippingAddress1: Swift.String?
+  @objc final public var shippingAddress2: Swift.String?
+  @objc final public var shippingAddress3: Swift.String?
+  @objc final public var shippingCity: Swift.String?
+  @objc final public var shippingState: Swift.String?
+  @objc final public var shippingPostalCode: Swift.String?
+  @objc final public var shippingCountryCode: Swift.String?
+  @objc final public var paymentExpiry: Swift.String?
   @objc override dynamic public init()
   @objc deinit
 }
@@ -206,7 +237,11 @@ extension ChaCha20 {
   @objc override dynamic public init()
   @objc deinit
 }
-extension Collection where Self.Element == Swift.UInt8, Self.Index == Swift.Int {
+@_inheritsConvenienceInitializers @objc final public class UserShippingAddress : PGW.BaseUserAddress {
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension Swift.Collection where Self.Element == Swift.UInt8, Self.Index == Swift.Int {
   @inlinable internal func toUInt32Array() -> Swift.Array<Swift.UInt32> {
     guard !isEmpty else {
       return []
@@ -271,11 +306,11 @@ internal func strideCount(from: Swift.Int, to: Swift.Int, by: Swift.Int) -> Swif
   @objc override dynamic public init()
   @objc deinit
 }
-extension Rabbit {
+extension PGW.Rabbit {
   convenience public init(key: Swift.String) throws
   convenience public init(key: Swift.String, iv: Swift.String) throws
 }
-extension Array {
+extension Swift.Array {
   @inlinable internal init(reserveCapacity: Swift.Int) {
     self = Array<Element>()
     self.reserveCapacity(reserveCapacity)
@@ -286,11 +321,11 @@ extension Array {
   }
   }
 }
-extension Array where Element == Swift.UInt8 {
+extension Swift.Array where Element == Swift.UInt8 {
   public init(hex: Swift.String)
   public func toHexString() -> Swift.String
 }
-extension Array where Element == Swift.UInt8 {
+extension Swift.Array where Element == Swift.UInt8 {
   @available(*, deprecated)
   public func chunks(size chunksize: Swift.Int) -> Swift.Array<Swift.Array<Element>>
   public func md5() -> [Element]
@@ -463,6 +498,17 @@ public struct OFB : PGW.BlockMode {
   @objc override dynamic public init()
   @objc deinit
 }
+@objc @_inheritsConvenienceInitializers public class BaseUserAddress : PGW.BaseModel {
+  @objc public var address1: Swift.String!
+  @objc public var address2: Swift.String!
+  @objc public var address3: Swift.String!
+  @objc public var city: Swift.String!
+  @objc public var state: Swift.String!
+  @objc public var postalCode: Swift.String!
+  @objc public var countryCode: Swift.String!
+  @objc override dynamic public init()
+  @objc deinit
+}
 @objc @_inheritsConvenienceInitializers public class BaseModel : ObjectiveC.NSObject {
   public func print()
   @objc override dynamic public init()
@@ -513,7 +559,7 @@ public struct OFB : PGW.BlockMode {
   @objc override dynamic public init()
   @objc deinit
 }
-extension String {
+extension Swift.String {
   @inlinable public var bytes: Swift.Array<Swift.UInt8> {
     get {
     data(using: String.Encoding.utf8, allowLossyConversion: true)?.bytes ?? Array(utf8)
@@ -558,6 +604,22 @@ extension String {
   @inlinable public func authenticate<A>(with authenticator: A) throws -> Swift.String where A : PGW.Authenticator {
     try self.bytes.authenticate(with: authenticator).toHexString()
   }
+}
+@_inheritsConvenienceInitializers @objc final public class PaymentProvider : PGW.BaseModel {
+  @objc final public var id: Swift.String! {
+    get
+  }
+  @objc final public var channels: [Swift.String]! {
+    get
+  }
+  @objc final public var merchantInfo: PGW.MerchantInfo! {
+    get
+  }
+  @objc final public var transactionInfo: PGW.TransactionInfo! {
+    get
+  }
+  @objc override dynamic public init()
+  @objc deinit
 }
 @_inheritsConvenienceInitializers @objc final public class InstallmentPlan : PGW.BaseModel {
   @objc final public var sequenceNo: Swift.Int {
@@ -614,9 +676,9 @@ extension String {
 }
 public protocol _UInt8Type {
 }
-extension UInt8 : PGW._UInt8Type {
+extension Swift.UInt8 : PGW._UInt8Type {
 }
-extension UInt8 {
+extension Swift.UInt8 {
   public func bits() -> [PGW.Bit]
   public func bits() -> Swift.String
 }
@@ -627,7 +689,7 @@ extension UInt8 {
   @objc override dynamic public init()
   @objc deinit
 }
-extension Array where Element == Swift.UInt8 {
+extension Swift.Array where Element == Swift.UInt8 {
   public func toBase64() -> Swift.String
   public init(base64: Swift.String)
 }
@@ -712,6 +774,19 @@ final internal class BlockEncryptor : PGW.Cryptor, PGW.Updatable {
   @objc override dynamic public init()
   @objc deinit
 }
+@_inheritsConvenienceInitializers @objc final public class TransactionResultAdditionalInfo : PGW.BaseModel {
+  @objc final public var qrData: Swift.String! {
+    get
+  }
+  @objc final public var barcodeData: Swift.String! {
+    get
+  }
+  @objc final public var referenceNo: Swift.String! {
+    get
+  }
+  @objc override dynamic public init()
+  @objc deinit
+}
 public protocol Cryptor {
   mutating func seek(to: Swift.Int) throws
 }
@@ -773,10 +848,9 @@ public protocol AEAD {
   }
   @objc public init(channelCode: Swift.String)
   @objc(initWithChannelCode:agentCode:agentChannelCode:) public init(channelCode: Swift.String, _ agentCode: Swift.String, _ agentChannelCode: Swift.String)
-  @objc override dynamic public init()
   @objc deinit
 }
-extension Blowfish {
+extension PGW.Blowfish {
   convenience public init(key: Swift.String, iv: Swift.String, padding: PGW.Padding = .pkcs7) throws
 }
 @_hasMissingDesignatedInitializers final public class AEADChaCha20Poly1305 : PGW.AEAD {
@@ -838,7 +912,7 @@ final public class Blowfish {
   public init(key: Swift.Array<Swift.UInt8>, blockMode: PGW.BlockMode = CBC(iv: Array<UInt8>(repeating: 0, count: Blowfish.blockSize)), padding: PGW.Padding) throws
   @objc deinit
 }
-extension Blowfish : PGW.Cipher {
+extension PGW.Blowfish : PGW.Cipher {
   final public func encrypt<C>(_ bytes: C) throws -> Swift.Array<Swift.UInt8> where C : Swift.Collection, C.Element == Swift.UInt8, C.Index == Swift.Int
   final public func decrypt<C>(_ bytes: C) throws -> Swift.Array<Swift.UInt8> where C : Swift.Collection, C.Element == Swift.UInt8, C.Index == Swift.Int
 }
@@ -853,6 +927,9 @@ extension Blowfish : PGW.Cipher {
     get
   }
   @objc final public var paymentCustomDatas: [PGW.PaymentCustomData]! {
+    get
+  }
+  @objc final public var paymentProvider: PGW.PaymentProvider! {
     get
   }
   @objc override dynamic public init()
@@ -883,7 +960,7 @@ final public class SHA1 {
   final internal func process(block chunk: Swift.ArraySlice<Swift.UInt8>, currentHash hh: inout Swift.ContiguousArray<Swift.UInt32>)
   @objc deinit
 }
-extension SHA1 : PGW.Updatable {
+extension PGW.SHA1 : PGW.Updatable {
   @discardableResult
   @inlinable final public func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8> {
     self.accumulated += bytes
@@ -978,6 +1055,27 @@ extension SHA1 : PGW.Updatable {
   @objc final public var billingCountryCode: Swift.String! {
     get
   }
+  @objc final public var shippingAddress1: Swift.String! {
+    get
+  }
+  @objc final public var shippingAddress2: Swift.String! {
+    get
+  }
+  @objc final public var shippingAddress3: Swift.String! {
+    get
+  }
+  @objc final public var shippingCity: Swift.String! {
+    get
+  }
+  @objc final public var shippingState: Swift.String! {
+    get
+  }
+  @objc final public var shippingPostalCode: Swift.String! {
+    get
+  }
+  @objc final public var shippingCountryCode: Swift.String! {
+    get
+  }
   @objc override dynamic public init()
   @objc deinit
 }
@@ -1009,6 +1107,8 @@ public struct PCBC : PGW.BlockMode {
   public func worker(blockSize: Swift.Int, cipherOperation: @escaping PGW.CipherOperationOnBlock, encryptionOperation: @escaping PGW.CipherOperationOnBlock) throws -> PGW.CipherModeWorker
 }
 @_inheritsConvenienceInitializers @objc final public class PaymentRequest : PGW.BaseModel {
+  @objc final public var code: PGW.PaymentCode!
+  @objc final public var data: PGW.PaymentData!
   @objc override dynamic public init()
   @objc deinit
 }
@@ -1061,6 +1161,27 @@ public struct PCBC : PGW.BlockMode {
   @objc final public var billingCountryCode: Swift.String! {
     get
   }
+  @objc final public var shippingAddress1: Swift.String! {
+    get
+  }
+  @objc final public var shippingAddress2: Swift.String! {
+    get
+  }
+  @objc final public var shippingAddress3: Swift.String! {
+    get
+  }
+  @objc final public var shippingCity: Swift.String! {
+    get
+  }
+  @objc final public var shippingState: Swift.String! {
+    get
+  }
+  @objc final public var shippingPostalCode: Swift.String! {
+    get
+  }
+  @objc final public var shippingCountryCode: Swift.String! {
+    get
+  }
   @objc final public var additional: PGW.PaymentValidationAdditional! {
     get
   }
@@ -1083,7 +1204,7 @@ public struct PCBC : PGW.BlockMode {
   @objc override dynamic public init()
   @objc deinit
 }
-extension PKCS5 {
+extension PGW.PKCS5 {
   public struct PBKDF1 {
     public enum Error : Swift.Error {
       case invalidInput
@@ -1155,10 +1276,10 @@ final public class GCM : PGW.BlockMode {
 }
 public protocol Updatable {
   mutating func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool) throws -> Swift.Array<Swift.UInt8>
-  mutating func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws
+  mutating func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool, output: (_ bytes: Swift.Array<Swift.UInt8>) -> Swift.Void) throws
 }
-extension Updatable {
-  @inlinable public mutating func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws {
+extension PGW.Updatable {
+  @inlinable public mutating func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false, output: (_ bytes: Swift.Array<Swift.UInt8>) -> Swift.Void) throws {
     let processed = try update(withBytes: bytes, isLast: isLast)
     if !processed.isEmpty {
       output(processed)
@@ -1170,7 +1291,7 @@ extension Updatable {
   @inlinable public mutating func update(withBytes bytes: Swift.Array<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8> {
     try self.update(withBytes: bytes.slice, isLast: isLast)
   }
-  @inlinable public mutating func update(withBytes bytes: Swift.Array<Swift.UInt8>, isLast: Swift.Bool = false, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws {
+  @inlinable public mutating func update(withBytes bytes: Swift.Array<Swift.UInt8>, isLast: Swift.Bool = false, output: (_ bytes: Swift.Array<Swift.UInt8>) -> Swift.Void) throws {
     try self.update(withBytes: bytes.slice, isLast: isLast, output: output)
   }
   @inlinable public mutating func finish(withBytes bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8> {
@@ -1182,13 +1303,13 @@ extension Updatable {
   @inlinable public mutating func finish() throws -> Swift.Array<Swift.UInt8> {
     try self.update(withBytes: [], isLast: true)
   }
-  @inlinable public mutating func finish(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws {
+  @inlinable public mutating func finish(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, output: (_ bytes: Swift.Array<Swift.UInt8>) -> Swift.Void) throws {
     let processed = try update(withBytes: bytes, isLast: true)
     if !processed.isEmpty {
       output(processed)
     }
   }
-  @inlinable public mutating func finish(withBytes bytes: Swift.Array<Swift.UInt8>, output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws {
+  @inlinable public mutating func finish(withBytes bytes: Swift.Array<Swift.UInt8>, output: (_ bytes: Swift.Array<Swift.UInt8>) -> Swift.Void) throws {
     try self.finish(withBytes: bytes.slice, output: output)
   }
   @inlinable public mutating func finish(output: (Swift.Array<Swift.UInt8>) -> Swift.Void) throws {
@@ -1296,8 +1417,8 @@ final public class HMAC : PGW.Authenticator {
   @objc deinit
 }
 @objc final public class TransactionResultRequest : PGW.BaseRequest {
+  @objc final public var payment: PGW.PaymentRequest?
   @objc public init(paymentToken: Swift.String)
-  @objc override dynamic public init()
   @objc deinit
 }
 public struct HKDF {
@@ -1363,7 +1484,7 @@ final public class Poly1305 : PGW.Authenticator {
   @objc override dynamic public init()
   @objc deinit
 }
-extension UInt32 {
+extension Swift.UInt32 {
   @_specialize(exported: false, kind: full, where T == Swift.ArraySlice<Swift.UInt8>)
   @inlinable internal init<T>(bytes: T, fromIndex index: T.Index) where T : Swift.Collection, T.Element == Swift.UInt8, T.Index == Swift.Int {
     if bytes.isEmpty {
@@ -1382,6 +1503,9 @@ extension UInt32 {
   }
 }
 @_inheritsConvenienceInitializers @objc final public class TransactionResultResponse : PGW.BaseTransactionResultResponse {
+  @objc final public var additionalInfo: PGW.TransactionResultAdditionalInfo! {
+    get
+  }
   @objc override dynamic public init()
   @objc deinit
 }
@@ -1404,6 +1528,7 @@ public enum PKCS5 {
   @objc final public func name(_ name: Swift.String) -> PGW.BuyNowPayLaterPaymentBuilder
   @objc final public func email(_ email: Swift.String) -> PGW.BuyNowPayLaterPaymentBuilder
   @objc final public func mobileNo(_ mobileNo: Swift.String) -> PGW.BuyNowPayLaterPaymentBuilder
+  @objc final public func paymentExpiry(_ paymentExpiry: Swift.String) -> PGW.BuyNowPayLaterPaymentBuilder
   @objc final public func userAddress(_ userAddress: PGW.UserAddress) -> PGW.BuyNowPayLaterPaymentBuilder
   @objc final public func build() -> PGW.PaymentRequest
   @objc deinit
@@ -1479,14 +1604,7 @@ public enum PKCS5 {
     data += Array<UInt8>(repeating: 0, count: blockSize + max - 1 - (msgLength % blockSize))
   }
 }
-@_inheritsConvenienceInitializers @objc final public class UserBillingAddress : PGW.BaseModel {
-  @objc final public var address1: Swift.String!
-  @objc final public var address2: Swift.String!
-  @objc final public var address3: Swift.String!
-  @objc final public var city: Swift.String!
-  @objc final public var state: Swift.String!
-  @objc final public var postalCode: Swift.String!
-  @objc final public var countryCode: Swift.String!
+@_inheritsConvenienceInitializers @objc final public class UserBillingAddress : PGW.BaseUserAddress {
   @objc override dynamic public init()
   @objc deinit
 }
@@ -1494,7 +1612,6 @@ public enum PKCS5 {
   @objc final public var categoryCode: Swift.String
   @objc final public var groupCode: Swift.String
   @objc public init(paymentToken: Swift.String)
-  @objc override dynamic public init()
   @objc deinit
 }
 @_inheritsConvenienceInitializers @objc final public class PaymentOptionResponse : PGW.BaseResponse {
@@ -1519,7 +1636,7 @@ public enum PKCS5 {
   @objc override dynamic public init()
   @objc deinit
 }
-extension UInt64 {
+extension Swift.UInt64 {
   @_specialize(exported: false, kind: full, where T == Swift.ArraySlice<Swift.UInt8>)
   @inlinable internal init<T>(bytes: T, fromIndex index: T.Index) where T : Swift.Collection, T.Element == Swift.UInt8, T.Index == Swift.Int {
     if bytes.isEmpty {
@@ -1543,7 +1660,6 @@ extension UInt64 {
 }
 @objc final public class PaymentOptionRequest : PGW.BaseRequest {
   @objc public init(paymentToken: Swift.String)
-  @objc override dynamic public init()
   @objc deinit
 }
 final public class SHA2 {
@@ -1599,7 +1715,7 @@ final public class SHA2 {
   final internal func process32(block chunk: Swift.ArraySlice<Swift.UInt8>, currentHash hh: inout Swift.Array<Swift.UInt32>)
   @objc deinit
 }
-extension SHA2 : PGW.Updatable {
+extension PGW.SHA2 : PGW.Updatable {
   @inlinable final public func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8> {
     self.accumulated += bytes
 
@@ -1684,7 +1800,7 @@ extension SHA2 : PGW.Updatable {
   @objc override dynamic public init()
   @objc deinit
 }
-extension PKCS5 {
+extension PGW.PKCS5 {
   public struct PBKDF2 {
     public enum Error : Swift.Error {
       case invalidInput
@@ -1701,7 +1817,6 @@ extension PKCS5 {
 }
 @objc final public class UserPreferenceRequest : PGW.BaseRequest {
   @objc public init(paymentToken: Swift.String)
-  @objc override dynamic public init()
   @objc deinit
 }
 @_inheritsConvenienceInitializers @objc final public class CardTokenInfoResponse : PGW.BaseResponse {
@@ -1716,6 +1831,7 @@ extension PKCS5 {
 }
 @_inheritsConvenienceInitializers @objc final public class UserAddressBuilder : PGW.BaseModel {
   @objc final public func userBillingAddress(_ userBillingAddress: PGW.UserBillingAddress) -> PGW.UserAddressBuilder
+  @objc final public func userShippingAddress(_ userShippingAddress: PGW.UserShippingAddress) -> PGW.UserAddressBuilder
   @objc final public func build() -> PGW.UserAddress
   @objc override dynamic public init()
   @objc deinit
@@ -1723,7 +1839,6 @@ extension PKCS5 {
 @objc final public class ExchangeRateRequest : PGW.BaseRequest {
   @objc final public var bin: Swift.String
   @objc public init(paymentToken: Swift.String)
-  @objc override dynamic public init()
   @objc deinit
 }
 @_inheritsConvenienceInitializers @objc final public class PaymentNotificationResponse : PGW.BaseResponse {
@@ -1763,10 +1878,9 @@ extension PKCS5 {
   @objc final public var recipientId: Swift.String
   @objc final public var recipientName: Swift.String
   @objc public init(paymentToken: Swift.String)
-  @objc override dynamic public init()
   @objc deinit
 }
-public typealias PGWWebViewTransactionStatusInquiry = (Swift.String) -> ()
+public typealias PGWWebViewTransactionStatusInquiry = (_ paymentToken: Swift.String) -> ()
 public protocol PaddingProtocol {
   func add(to: Swift.Array<Swift.UInt8>, blockSize: Swift.Int) -> Swift.Array<Swift.UInt8>
   func remove(from: Swift.Array<Swift.UInt8>, blockSize: Swift.Int?) -> Swift.Array<Swift.UInt8>
@@ -1784,7 +1898,6 @@ public enum Padding : PGW.PaddingProtocol {
 @objc final public class TransactionStatusRequest : PGW.BaseRequest {
   @objc final public var additionalInfo: Swift.Bool
   @objc public init(paymentToken: Swift.String)
-  @objc override dynamic public init()
   @objc deinit
 }
 @_inheritsConvenienceInitializers @objc final public class SystemInitializationRequest : PGW.BaseRequest {
@@ -1793,15 +1906,13 @@ public enum Padding : PGW.PaddingProtocol {
 }
 @objc final public class CardTokenInfoRequest : PGW.BaseRequest {
   @objc public init(paymentToken: Swift.String)
-  @objc override dynamic public init()
   @objc deinit
 }
 @objc final public class CancelTransactionRequest : PGW.BaseRequest {
   @objc public init(paymentToken: Swift.String)
-  @objc override dynamic public init()
   @objc deinit
 }
-extension Data {
+extension Foundation.Data {
   public func checksum() -> Swift.UInt16
   public func md5() -> Foundation.Data
   public func sha1() -> Foundation.Data
@@ -1817,7 +1928,7 @@ extension Data {
   public func decrypt(cipher: PGW.Cipher) throws -> Foundation.Data
   public func authenticate(with authenticator: PGW.Authenticator) throws -> Foundation.Data
 }
-extension Data {
+extension Foundation.Data {
   public init(hex: Swift.String)
   public var bytes: Swift.Array<Swift.UInt8> {
     get
@@ -1903,7 +2014,7 @@ extension Data {
     get
   }
 }
-extension AES : PGW.Cryptors {
+extension PGW.AES : PGW.Cryptors {
   @inlinable final public func makeEncryptor() throws -> PGW.Cryptor & PGW.Updatable {
     let blockSize = blockMode.customBlockSize ?? AES.blockSize
     let worker = try blockMode.worker(blockSize: blockSize, cipherOperation: encrypt, encryptionOperation: encrypt)
@@ -1934,7 +2045,7 @@ final public class MD5 {
   final public func calculate(for bytes: Swift.Array<Swift.UInt8>) -> Swift.Array<Swift.UInt8>
   @objc deinit
 }
-extension MD5 : PGW.Updatable {
+extension PGW.MD5 : PGW.Updatable {
   final public func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8>
 }
 @_inheritsConvenienceInitializers @objc final public class APIResponseCode : ObjectiveC.NSObject {
@@ -1998,7 +2109,7 @@ final public class Rabbit {
   public init(key: Swift.Array<Swift.UInt8>, iv: Swift.Array<Swift.UInt8>?) throws
   @objc deinit
 }
-extension Rabbit : PGW.Cipher {
+extension PGW.Rabbit : PGW.Cipher {
   final public func encrypt(_ bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
   final public func decrypt(_ bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
 }
@@ -2011,7 +2122,7 @@ public protocol Cryptors : AnyObject {
   func makeDecryptor() throws -> PGW.Cryptor & PGW.Updatable
   static func randomIV(_ blockSize: Swift.Int) -> Swift.Array<Swift.UInt8>
 }
-extension Cryptors {
+extension PGW.Cryptors {
   public static func randomIV(_ count: Swift.Int) -> Swift.Array<Swift.UInt8>
 }
 @_inheritsConvenienceInitializers @objc final public class PaymentNotificationPlatformCode : ObjectiveC.NSObject {
@@ -2023,17 +2134,17 @@ extension Cryptors {
   @objc override dynamic public init()
   @objc deinit
 }
-extension HMAC {
+extension PGW.HMAC {
   convenience public init(key: Swift.String, variant: PGW.HMAC.Variant = .md5) throws
 }
-extension AES {
+extension PGW.AES {
   convenience public init(key: Swift.String, iv: Swift.String, padding: PGW.Padding = .pkcs7) throws
 }
 public typealias APIResponse<T> = (T) -> ()
 public typealias APIFailure = (Foundation.NSError) -> ()
-public typealias PGWWebViewNavigationDidStartProvisionalNavigation = (Swift.String) -> ()
-public typealias PGWWebViewNavigationDecidePolicyForNavigationAction = (Swift.String) -> ()
-public typealias PGWWebViewNavigationDidFinishNavigation = (Swift.String) -> ()
+public typealias PGWWebViewNavigationDidStartProvisionalNavigation = (_ url: Swift.String) -> ()
+public typealias PGWWebViewNavigationDecidePolicyForNavigationAction = (_ url: Swift.String) -> ()
+public typealias PGWWebViewNavigationDidFinishNavigation = (_ url: Swift.String) -> ()
 public class BlockDecryptor : PGW.Cryptor, PGW.Updatable {
   @usableFromInline
   final internal let blockSize: Swift.Int
@@ -2103,7 +2214,7 @@ public class BlockDecryptor : PGW.Cryptor, PGW.Updatable {
   @objc override dynamic public init()
   @objc deinit
 }
-extension Constants {
+extension PGW.Constants {
   @objc public static let JSON_NAME_PAYMENT_TOKEN: Swift.String
   @objc public static let JSON_NAME_NAME: Swift.String
   @objc public static let JSON_NAME_CODE: Swift.String
@@ -2174,19 +2285,16 @@ extension Constants {
   @objc public static let JSON_NAME_REGEX: Swift.String
   @objc public static let JSON_NAME_VALIDATION: Swift.String
   @objc public static let JSON_NAME_CURRENCY_CODES: Swift.String
-  @objc public static let JSON_NAME_SERVICE_ID: Swift.String
   @objc public static let JSON_NAME_ITEM_TOTAL_PRICE: Swift.String
   @objc public static let JSON_NAME_SHIPPING_PRICE: Swift.String
   @objc public static let JSON_NAME_TAX: Swift.String
   @objc public static let JSON_NAME_TOTAL_PRICE: Swift.String
   @objc public static let JSON_NAME_BRANDS: Swift.String
   @objc public static let JSON_NAME_ACCOUNT_NO: Swift.String
-  @objc public static let JSON_NAME_MASTERPASS: Swift.String
   @objc public static let JSON_NAME_CHECKOUT_ID: Swift.String
   @objc public static let JSON_NAME_CART_ID: Swift.String
   @objc public static let JSON_NAME_SUPPRESS_3DS: Swift.String
   @objc public static let JSON_NAME_SUPPRESS_CVC2: Swift.String
-  @objc public static let JSON_NAME_NETWORKS: Swift.String
   @objc public static let JSON_NAME_BANK: Swift.String
   @objc public static let JSON_NAME_COUNTRY: Swift.String
   @objc public static let JSON_NAME_TOKEN: Swift.String
@@ -2253,14 +2361,27 @@ extension Constants {
   @objc public static let JSON_NAME_EXPIRY_DESCRIPTION: Swift.String
   @objc public static let JSON_NAME_ALTERNATIVE_PAYMENT_METHOD_MULTIPLE_CURRENCY_CONVERSION: Swift.String
   @objc public static let JSON_NAME_MONTHLY_PAYMENT: Swift.String
+  @objc public static let JSON_NAME_USER_SHIPPING_ADDRESS: Swift.String
+  @objc public static let JSON_NAME_SHIPPING_ADDRESS_1: Swift.String
+  @objc public static let JSON_NAME_SHIPPING_ADDRESS_2: Swift.String
+  @objc public static let JSON_NAME_SHIPPING_ADDRESS_3: Swift.String
+  @objc public static let JSON_NAME_SHIPPING_CITY: Swift.String
+  @objc public static let JSON_NAME_SHIPPING_STATE: Swift.String
+  @objc public static let JSON_NAME_SHIPPING_POSTAL_CODE: Swift.String
+  @objc public static let JSON_NAME_SHIPPING_COUNTRY_CODE: Swift.String
+  @objc public static let JSON_NAME_PAYMENT_EXPIRY: Swift.String
+  @objc public static let JSON_NAME_QR_DATA: Swift.String
+  @objc public static let JSON_NAME_BARCODE_DATA: Swift.String
+  @objc public static let JSON_NAME_REFERENCE_NO: Swift.String
+  @objc public static let JSON_NAME_EXTRAS: Swift.String
+  @objc public static let JSON_NAME_PROVIDER: Swift.String
 }
 @objc final public class PGWWebViewNavigationDelegate : PGW.BaseModel {
   @objc(initWithTransactionStatusCallback:) public init(_ transactionStatusCallback: @escaping PGW.PGWWebViewTransactionStatusInquiry)
   @objc(navigationCallbackWithDidStartProvisionalNavigation:decidePolicyForNavigationAction:didFinishNavigation:) final public func navigationCallback(didStartProvisionalNavigation: @escaping PGW.PGWWebViewNavigationDidStartProvisionalNavigation, decidePolicyForNavigationAction: @escaping PGW.PGWWebViewNavigationDecidePolicyForNavigationAction, didFinishNavigation: @escaping PGW.PGWWebViewNavigationDidFinishNavigation)
-  @objc override dynamic public init()
   @objc deinit
 }
-extension PGWWebViewNavigationDelegate : WebKit.WKNavigationDelegate {
+extension PGW.PGWWebViewNavigationDelegate : WebKit.WKNavigationDelegate {
   @objc final public func webView(_ webView: WebKit.WKWebView, didStartProvisionalNavigation navigation: WebKit.WKNavigation!)
   @objc final public func webView(_ webView: WebKit.WKWebView, decidePolicyFor navigationAction: WebKit.WKNavigationAction, decisionHandler: @escaping (WebKit.WKNavigationActionPolicy) -> Swift.Void)
   @objc final public func webView(_ webView: WebKit.WKWebView, didFinish navigation: WebKit.WKNavigation!)
@@ -2286,7 +2407,7 @@ extension PGWWebViewNavigationDelegate : WebKit.WKNavigationDelegate {
 
   return bytes
 }
-public typealias CipherOperationOnBlock = (Swift.ArraySlice<Swift.UInt8>) -> Swift.Array<Swift.UInt8>?
+public typealias CipherOperationOnBlock = (_ block: Swift.ArraySlice<Swift.UInt8>) -> Swift.Array<Swift.UInt8>?
 public protocol BlockMode {
   var options: PGW.BlockModeOption { get }
   @inlinable func worker(blockSize: Swift.Int, cipherOperation: @escaping PGW.CipherOperationOnBlock, encryptionOperation: @escaping PGW.CipherOperationOnBlock) throws -> PGW.CipherModeWorker
@@ -2310,7 +2431,6 @@ public protocol BlockMode {
   @objc(systemInitializationWithSystemInitializationRequest:response:failure:) final public func systemInitialization(systemInitializationRequest request: PGW.SystemInitializationRequest, _ response: @escaping PGW.APIResponse<PGW.SystemInitializationResponse>, _ failure: @escaping PGW.APIFailure)
   @objc(paymentNotificationWithPaymentNotificationRequest:response:failure:) final public func paymentNotification(paymentNotificationRequest request: PGW.PaymentNotificationRequest, _ response: @escaping PGW.APIResponse<PGW.PaymentNotificationResponse>, _ failure: @escaping PGW.APIFailure)
   @objc(cancelTransactionWithCancelTransactionRequest:response:failure:) final public func cancelTransaction(cancelTransactionRequest request: PGW.CancelTransactionRequest, _ response: @escaping PGW.APIResponse<PGW.CancelTransactionResponse>, _ failure: @escaping PGW.APIFailure)
-  @objc override dynamic public init()
   @objc deinit
 }
 final public class ChaCha20 {
@@ -2328,23 +2448,23 @@ final public class ChaCha20 {
   public init(key: Swift.Array<Swift.UInt8>, iv nonce: Swift.Array<Swift.UInt8>) throws
   @objc deinit
 }
-extension ChaCha20 : PGW.Cipher {
+extension PGW.ChaCha20 : PGW.Cipher {
   final public func encrypt(_ bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
   final public func decrypt(_ bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
 }
-extension ChaCha20 {
+extension PGW.ChaCha20 {
   public struct ChaChaEncryptor : PGW.Cryptor, PGW.Updatable {
     public mutating func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8>
     public func seek(to: Swift.Int) throws
   }
 }
-extension ChaCha20 {
+extension PGW.ChaCha20 {
   public struct ChaChaDecryptor : PGW.Cryptor, PGW.Updatable {
     public mutating func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = true) throws -> Swift.Array<Swift.UInt8>
     public func seek(to: Swift.Int) throws
   }
 }
-extension ChaCha20 : PGW.Cryptors {
+extension PGW.ChaCha20 : PGW.Cryptors {
   final public func makeEncryptor() -> PGW.Cryptor & PGW.Updatable
   final public func makeDecryptor() -> PGW.Cryptor & PGW.Updatable
 }
@@ -2357,7 +2477,7 @@ public enum Bit : Swift.Int {
     get
   }
 }
-extension Bit {
+extension PGW.Bit {
   @inlinable internal func inverted() -> PGW.Bit {
     self == .zero ? .one : .zero
   }
@@ -2373,7 +2493,6 @@ extension Bit {
 }
 @objc public class BasePaymentBuilder : PGW.BaseModel {
   @objc public init(paymentCode: PGW.PaymentCode)
-  @objc override dynamic public init()
   @objc deinit
 }
 @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc final public class CardTokenPaymentBuilder : PGW.BaseCardPaymentBuilder {
@@ -2389,6 +2508,7 @@ extension Bit {
   @objc final public func name(_ name: Swift.String) -> PGW.CardTokenPaymentBuilder
   @objc final public func email(_ email: Swift.String) -> PGW.CardTokenPaymentBuilder
   @objc final public func mobileNo(_ mobileNo: Swift.String) -> PGW.CardTokenPaymentBuilder
+  @objc final public func paymentExpiry(_ paymentExpiry: Swift.String) -> PGW.CardTokenPaymentBuilder
   @objc final public func userAddress(_ userAddress: PGW.UserAddress) -> PGW.CardTokenPaymentBuilder
   @objc final public func build() -> PGW.PaymentRequest
   @objc deinit
@@ -2400,6 +2520,7 @@ extension Bit {
   @objc final public func name(_ name: Swift.String) -> PGW.InternetBankingBuilder
   @objc final public func email(_ email: Swift.String) -> PGW.InternetBankingBuilder
   @objc final public func mobileNo(_ mobileNo: Swift.String) -> PGW.InternetBankingBuilder
+  @objc final public func paymentExpiry(_ paymentExpiry: Swift.String) -> PGW.InternetBankingBuilder
   @objc final public func userAddress(_ userAddress: PGW.UserAddress) -> PGW.InternetBankingBuilder
   @objc deinit
 }
@@ -2412,6 +2533,7 @@ extension Bit {
   @objc final public func name(_ name: Swift.String) -> PGW.DigitalPaymentBuilder
   @objc final public func email(_ email: Swift.String) -> PGW.DigitalPaymentBuilder
   @objc final public func mobileNo(_ mobileNo: Swift.String) -> PGW.DigitalPaymentBuilder
+  @objc final public func paymentExpiry(_ paymentExpiry: Swift.String) -> PGW.DigitalPaymentBuilder
   @objc final public func userAddress(_ userAddress: PGW.UserAddress) -> PGW.DigitalPaymentBuilder
   @objc final public func build() -> PGW.PaymentRequest
   @objc deinit
@@ -2419,7 +2541,7 @@ extension Bit {
 @usableFromInline
 internal struct BatchedCollectionIndex<Base> where Base : Swift.Collection {
 }
-extension BatchedCollectionIndex : Swift.Comparable {
+extension PGW.BatchedCollectionIndex : Swift.Comparable {
   @usableFromInline
   internal static func == <Base>(lhs: PGW.BatchedCollectionIndex<Base>, rhs: PGW.BatchedCollectionIndex<Base>) -> Swift.Bool where Base : Swift.Collection
   @usableFromInline
@@ -2454,7 +2576,7 @@ internal struct BatchedCollection<Base> : Swift.Collection where Base : Swift.Co
   @usableFromInline
   internal typealias SubSequence = Swift.Slice<PGW.BatchedCollection<Base>>
 }
-extension Collection {
+extension Swift.Collection {
   @inlinable internal func batched(by size: Swift.Int) -> PGW.BatchedCollection<Self> {
     BatchedCollection(base: self, size: size)
   }
@@ -2465,7 +2587,6 @@ extension Collection {
   @objc final public func locale(_ locale: Swift.String) -> PGW.TransactionResultRequestBuilder
   @objc(withPaymentRequest:) final public func with(_ paymentRequest: PGW.PaymentRequest) -> PGW.TransactionResultRequestBuilder
   @objc final public func build() -> PGW.TransactionResultRequest
-  @objc override dynamic public init()
   @objc deinit
 }
 @objc final public class PGWSDKParamsBuilder : PGW.BaseModel {
@@ -2474,7 +2595,6 @@ extension Collection {
   @objc final public func locale(_ locale: Swift.String) -> PGW.PGWSDKParamsBuilder
   @objc final public func log(_ enable: Swift.Bool) -> PGW.PGWSDKParamsBuilder
   @objc final public func build() -> PGW.PGWSDKParams
-  @objc override dynamic public init()
   @objc deinit
 }
 final public class SHA3 {
@@ -2508,7 +2628,7 @@ final public class SHA3 {
   final internal func process(block chunk: Swift.ArraySlice<Swift.UInt64>, currentHash hh: inout Swift.Array<Swift.UInt64>)
   @objc deinit
 }
-extension SHA3 : PGW.Updatable {
+extension PGW.SHA3 : PGW.Updatable {
   @inlinable final public func update(withBytes bytes: Swift.ArraySlice<Swift.UInt8>, isLast: Swift.Bool = false) throws -> Swift.Array<Swift.UInt8> {
     self.accumulated += bytes
 
@@ -2565,6 +2685,7 @@ extension SHA3 : PGW.Updatable {
   @objc final public func name(_ name: Swift.String) -> PGW.CardPaymentBuilder
   @objc final public func email(_ email: Swift.String) -> PGW.CardPaymentBuilder
   @objc final public func mobileNo(_ mobileNo: Swift.String) -> PGW.CardPaymentBuilder
+  @objc final public func paymentExpiry(_ paymentExpiry: Swift.String) -> PGW.CardPaymentBuilder
   @objc final public func userAddress(_ userAddress: PGW.UserAddress) -> PGW.CardPaymentBuilder
   @objc final public func build() -> PGW.PaymentRequest
   @objc deinit
@@ -2589,11 +2710,12 @@ extension SHA3 : PGW.Updatable {
   @objc final public func name(_ name: Swift.String) -> PGW.UniversalPaymentBuilder
   @objc final public func email(_ email: Swift.String) -> PGW.UniversalPaymentBuilder
   @objc final public func mobileNo(_ mobileNo: Swift.String) -> PGW.UniversalPaymentBuilder
+  @objc final public func paymentExpiry(_ paymentExpiry: Swift.String) -> PGW.UniversalPaymentBuilder
   @objc final public func userAddress(_ userAddress: PGW.UserAddress) -> PGW.UniversalPaymentBuilder
   @objc final public func build() -> PGW.PaymentRequest
   @objc deinit
 }
-extension FixedWidthInteger {
+extension Swift.FixedWidthInteger {
   @inlinable internal func bytes(totalBytes: Swift.Int = MemoryLayout<Self>.size) -> Swift.Array<Swift.UInt8> {
     arrayOfBytes(value: self.littleEndian, length: totalBytes)
     // TODO: adjust bytes order
@@ -2707,7 +2829,7 @@ final public class Checksum {
   }
   @objc deinit
 }
-extension Checksum {
+extension PGW.Checksum {
   @inlinable public static func crc32(_ message: Swift.Array<Swift.UInt8>, seed: Swift.UInt32? = nil, reflect: Swift.Bool = true) -> Swift.UInt32 {
     Checksum().crc32(message, seed: seed, reflect: reflect)
   }
@@ -2773,6 +2895,7 @@ public protocol Authenticator {
   @objc final public func name(_ name: Swift.String) -> PGW.QRPaymentBuilder
   @objc final public func email(_ email: Swift.String) -> PGW.QRPaymentBuilder
   @objc final public func mobileNo(_ mobileNo: Swift.String) -> PGW.QRPaymentBuilder
+  @objc final public func paymentExpiry(_ paymentExpiry: Swift.String) -> PGW.QRPaymentBuilder
   @objc final public func userAddress(_ userAddress: PGW.UserAddress) -> PGW.QRPaymentBuilder
   @objc final public func build() -> PGW.PaymentRequest
   @objc deinit
@@ -2819,6 +2942,9 @@ final public class Scrypt {
   @objc public var bannerUrl: Swift.String! {
     get
   }
+  @objc public var countryCode: Swift.String! {
+    get
+  }
   @objc override dynamic public init()
   @objc deinit
 }
@@ -2829,6 +2955,7 @@ final public class Scrypt {
   @objc final public func name(_ name: Swift.String) -> PGW.WebPaymentBuilder
   @objc final public func email(_ email: Swift.String) -> PGW.WebPaymentBuilder
   @objc final public func mobileNo(_ mobileNo: Swift.String) -> PGW.WebPaymentBuilder
+  @objc final public func paymentExpiry(_ paymentExpiry: Swift.String) -> PGW.WebPaymentBuilder
   @objc final public func userAddress(_ userAddress: PGW.UserAddress) -> PGW.WebPaymentBuilder
   @objc deinit
 }
@@ -2839,6 +2966,7 @@ final public class Scrypt {
   @objc final public func name(_ name: Swift.String) -> PGW.SelfServiceMachineBuilder
   @objc final public func email(_ email: Swift.String) -> PGW.SelfServiceMachineBuilder
   @objc final public func mobileNo(_ mobileNo: Swift.String) -> PGW.SelfServiceMachineBuilder
+  @objc final public func paymentExpiry(_ paymentExpiry: Swift.String) -> PGW.SelfServiceMachineBuilder
   @objc final public func userAddress(_ userAddress: PGW.UserAddress) -> PGW.SelfServiceMachineBuilder
   @objc deinit
 }
@@ -2849,6 +2977,7 @@ final public class Scrypt {
   @objc final public func name(_ name: Swift.String) -> PGW.PayAtCounterBuilder
   @objc final public func email(_ email: Swift.String) -> PGW.PayAtCounterBuilder
   @objc final public func mobileNo(_ mobileNo: Swift.String) -> PGW.PayAtCounterBuilder
+  @objc final public func paymentExpiry(_ paymentExpiry: Swift.String) -> PGW.PayAtCounterBuilder
   @objc final public func userAddress(_ userAddress: PGW.UserAddress) -> PGW.PayAtCounterBuilder
   @objc deinit
 }
@@ -2874,7 +3003,7 @@ public protocol Cipher : AnyObject {
   func decrypt(_ bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
   func decrypt(_ bytes: Swift.Array<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
 }
-extension Cipher {
+extension PGW.Cipher {
   public func encrypt(_ bytes: Swift.Array<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
   public func decrypt(_ bytes: Swift.Array<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8>
 }
@@ -3042,11 +3171,11 @@ final public class AES {
   final internal func decrypt(block: Swift.ArraySlice<Swift.UInt8>) -> Swift.Array<Swift.UInt8>?
   @objc deinit
 }
-extension AES {
+extension PGW.AES {
   @usableFromInline
   @inline(__always) final internal func F1(_ x0: Swift.UInt32, _ x1: Swift.UInt32, _ x2: Swift.UInt32, _ x3: Swift.UInt32) -> Swift.UInt32
 }
-extension AES : PGW.Cipher {
+extension PGW.AES : PGW.Cipher {
   @inlinable final public func encrypt(_ bytes: Swift.ArraySlice<Swift.UInt8>) throws -> Swift.Array<Swift.UInt8> {
     let blockSize = self.blockMode.customBlockSize ?? AES.blockSize
     let chunks = bytes.batched(by: blockSize)
