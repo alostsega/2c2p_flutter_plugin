@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/PGW-Swift.h</key>
 		<data>
-		UoR4pfGLTPXZthaPh+ATJWQOBtI=
+		P9CQCpyp7fYrpeh4pbF8lw00MGM=
 		</data>
 		<key>Headers/PGWSDK.h</key>
 		<data>
@@ -14,39 +14,39 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		rAlTTwqP2EFF20rnQVsGwYa65lA=
+		LBjG2LhqKmRe0uPiSynPhB27eYs=
 		</data>
 		<key>Modules/PGW.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo</key>
 		<data>
-		GhqJflxp8BuzPvJ5hWiiuEPKoGA=
+		fShNIojqW634sxKF0eT0mUSfzmQ=
 		</data>
 		<key>Modules/PGW.swiftmodule/Project/arm64.swiftsourceinfo</key>
 		<data>
-		GhqJflxp8BuzPvJ5hWiiuEPKoGA=
+		fShNIojqW634sxKF0eT0mUSfzmQ=
 		</data>
 		<key>Modules/PGW.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<data>
-		dL8KRFbjQtMJ1Ubwgq/qh3c/lXk=
+		SsSt+9iMclDiQrhIB9erJQyAmSE=
 		</data>
 		<key>Modules/PGW.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<data>
-		w5WeMFwCAreHr/Oh7p1ITTVI0/8=
+		90RGbEgw2jQHkxW02eXqm8j2xWg=
 		</data>
 		<key>Modules/PGW.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<data>
-		jTwuUTemc7aCfu0C6ro5ZxEQo5o=
+		LI2QhF+2HksvSPZzeDojNlgq89E=
 		</data>
 		<key>Modules/PGW.swiftmodule/arm64.swiftdoc</key>
 		<data>
-		dL8KRFbjQtMJ1Ubwgq/qh3c/lXk=
+		SsSt+9iMclDiQrhIB9erJQyAmSE=
 		</data>
 		<key>Modules/PGW.swiftmodule/arm64.swiftinterface</key>
 		<data>
-		w5WeMFwCAreHr/Oh7p1ITTVI0/8=
+		90RGbEgw2jQHkxW02eXqm8j2xWg=
 		</data>
 		<key>Modules/PGW.swiftmodule/arm64.swiftmodule</key>
 		<data>
-		jTwuUTemc7aCfu0C6ro5ZxEQo5o=
+		LI2QhF+2HksvSPZzeDojNlgq89E=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -63,11 +63,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			UoR4pfGLTPXZthaPh+ATJWQOBtI=
+			P9CQCpyp7fYrpeh4pbF8lw00MGM=
 			</data>
 			<key>hash2</key>
 			<data>
-			fMjs+526mxxMm4FKrR3B4BfmaawlJsQBJAubFK2lFY8=
+			0qjPqzcSWdieeIlW040+Zx/WO9EAd6ITISk4+emO3s4=
 			</data>
 		</dict>
 		<key>Headers/PGWSDK.h</key>
@@ -85,88 +85,88 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			GhqJflxp8BuzPvJ5hWiiuEPKoGA=
+			fShNIojqW634sxKF0eT0mUSfzmQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			6LWJPZ6Bxw9pfqkZpkJv5IqmFGp8OrPoqNzZe6s/FIQ=
+			NGvONmoCMG12tlPsuYnkyEJSgq9JqBPIrbX5fEmIr5A=
 			</data>
 		</dict>
 		<key>Modules/PGW.swiftmodule/Project/arm64.swiftsourceinfo</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			GhqJflxp8BuzPvJ5hWiiuEPKoGA=
+			fShNIojqW634sxKF0eT0mUSfzmQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			6LWJPZ6Bxw9pfqkZpkJv5IqmFGp8OrPoqNzZe6s/FIQ=
+			NGvONmoCMG12tlPsuYnkyEJSgq9JqBPIrbX5fEmIr5A=
 			</data>
 		</dict>
 		<key>Modules/PGW.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			dL8KRFbjQtMJ1Ubwgq/qh3c/lXk=
+			SsSt+9iMclDiQrhIB9erJQyAmSE=
 			</data>
 			<key>hash2</key>
 			<data>
-			RzQRk/CIdbLYl/+IFmUvmKXJtyFxP1MVdHxdMhkm8Nw=
+			FemOPgvXZbyVByejtlbBdHILmjLxuMWBg6O6jCiI5JU=
 			</data>
 		</dict>
 		<key>Modules/PGW.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			w5WeMFwCAreHr/Oh7p1ITTVI0/8=
+			90RGbEgw2jQHkxW02eXqm8j2xWg=
 			</data>
 			<key>hash2</key>
 			<data>
-			UbkHy1smKkUzGC6I+m5OYjqeq2spFFrlmyp+2UcuFN8=
+			M5d34XBEMMOhnExHJp4kqWYmFrGEQizm/QnSKTG/h8A=
 			</data>
 		</dict>
 		<key>Modules/PGW.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			jTwuUTemc7aCfu0C6ro5ZxEQo5o=
+			LI2QhF+2HksvSPZzeDojNlgq89E=
 			</data>
 			<key>hash2</key>
 			<data>
-			Nf8ThiynQG1bjCuYGcoLzAyGobLM9wiim2s8WG7HMWY=
+			IL75mJR/R0AgwjwHH1IvIZBxTDR7Lo4D+Xq/sd83dqI=
 			</data>
 		</dict>
 		<key>Modules/PGW.swiftmodule/arm64.swiftdoc</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			dL8KRFbjQtMJ1Ubwgq/qh3c/lXk=
+			SsSt+9iMclDiQrhIB9erJQyAmSE=
 			</data>
 			<key>hash2</key>
 			<data>
-			RzQRk/CIdbLYl/+IFmUvmKXJtyFxP1MVdHxdMhkm8Nw=
+			FemOPgvXZbyVByejtlbBdHILmjLxuMWBg6O6jCiI5JU=
 			</data>
 		</dict>
 		<key>Modules/PGW.swiftmodule/arm64.swiftinterface</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			w5WeMFwCAreHr/Oh7p1ITTVI0/8=
+			90RGbEgw2jQHkxW02eXqm8j2xWg=
 			</data>
 			<key>hash2</key>
 			<data>
-			UbkHy1smKkUzGC6I+m5OYjqeq2spFFrlmyp+2UcuFN8=
+			M5d34XBEMMOhnExHJp4kqWYmFrGEQizm/QnSKTG/h8A=
 			</data>
 		</dict>
 		<key>Modules/PGW.swiftmodule/arm64.swiftmodule</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			jTwuUTemc7aCfu0C6ro5ZxEQo5o=
+			LI2QhF+2HksvSPZzeDojNlgq89E=
 			</data>
 			<key>hash2</key>
 			<data>
-			Nf8ThiynQG1bjCuYGcoLzAyGobLM9wiim2s8WG7HMWY=
+			IL75mJR/R0AgwjwHH1IvIZBxTDR7Lo4D+Xq/sd83dqI=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
